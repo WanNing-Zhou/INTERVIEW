@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body{
+            min-width: 550px;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .header,.footer{
+            background-color: rgba(29,27,27,0.726);;
+            text-align: center;
+            height: 60px;
+            line-height: 60px;
+        }
+
+        .footer{
+            /*清除浮动*/
+            clear: both;
+        }
+
+        .middle,.left,.right{
+            height: 100px;
+        }
+        .content{
+            padding-left: 200px; /*空出left的位置*/
+            padding-right: 150px; /*空出right的位置*/
+            overflow: hidden;
+        }
+
+        .content div{
+            position: relative;
+            float: left;
+            text-align: center;
+            height: 300px;
+            line-height: 300px;
+        }
+
+        .middle {
+            width: 100%;
+            background-color: orange;
+        }
+        .left {
+            width: 200px;           /* leftContent width */
+            right: 200px;           /* leftContent width */
+            margin-left: -100%;
+            background-color: green;
+        }
+        .right {
+            width: 150px;           /* rightContent width */
+            margin-left: -150px;   /* rightContent width */
+            right: -150px;
+            background-color: skyblue;
+        }
+    </style>
+</head>
+<body>
+<div class="header">header</div>
+<div class="content wrapper">
+    <div class="middle">middle</div>
+    <div class="left">left</div>
+    <div class="right">right</div>
+</div>
+<div class="footer">footer</div>
+</body>
+</html>
