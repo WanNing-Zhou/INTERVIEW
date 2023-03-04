@@ -3,8 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <title>双飞翼布局</title>
+    <style>
+        body {
+            min-width: 550px;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        #header, #footer {
+            background: darkgoldenrod;
+            text-align: center;
+            height: 60px;
+            line-height: 60px;
+        }
+        #container {
+            /*这里预留位置用再预留*/
+            /*该元素大小有center撑开*/
+            overflow: hidden;
+        }
+        .column {
+            text-align: center;
+            height: 300px;
+            line-height: 300px;
+        }
+        #left, #right, #center {
+            float: left;
+        }
+        #center {
+            width: 100%;
+            background: gray;
+        }
+        #left {
+            width: 200px;
+            /*移动到上一行首首*/
+            margin-left: -100%;
+            background: skyblue;
+        }
+        #right {
+            width: 150px;
+            /*移动到上一行行尾*/
+            margin-left: -150px;
+            background: orange;
+        }
+        .content {
+            /*内容区显示的位置*/
+            margin: 0 150px 0 200px;
+        }
+    </style>
+
 </head>
 <body>
+    <div id="header"># header</div>
 
+    <div id="container">
+        <div id="center" class="column">
+            <div class="content"># center</div>
+        </div>
+
+        <div id="left" class="column">#left</div>
+        <div id="right" class="column">#right</div>
+    </div>
+
+    <div id="footer">#footer</div>
 </body>
 </html>
