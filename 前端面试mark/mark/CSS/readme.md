@@ -589,9 +589,98 @@ div.sticky {
 
 
 
-### <h2 id="9">css实现水平或垂直居中</h2>  
+### <h2 id="9">9. css实现水平或垂直居中</h2>  
 
-1. 
+#### <h3 id="9_1">9.1 absolute + 0000auto法:</h3>
+- 使用绝对定位+margin:auto, 给子元素添加如下样式
+- 父子元素宽高都未知时也适用
+
+```css
+.op1{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    margin: auto;
+}
+```
+#### <h3 id="9_2">9.2 absolute + 50%法</h3>
+- 使用绝对定位 + margin, 给子元素添加如下样式
+- 这种方法适合子元素宽高确定的情况,给margin-top设置百分比的大小将不生效,即margin-top%;不能达到垂直居中的效果
+
+```css
+.op2{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -100px; /*向上返回自身的50%高度*/
+    margin-left: -100px; /*向左返回自身的50%宽度*/
+}
+```
+
+#### <h3 id="9_3">9.3 flex的双center法</h3>
+
+- 父元素使用flex布局,并设置设置相关的属性伪center
+- 这种方式要求父元素的高度是确定的,百分比形式的高度将不生效
+```css
+/*这个方法给父元素使用*/
+.pro_po3{ 
+    height: 100vh;
+    display: flex;
+    justify-content: center; /*设置主轴方向居中显示*/
+    align-items: center;/*设置从轴方向居中显示*/
+}
+
+```
+
+#### <h3 id="9_4">9.4 使用绝对定位 + transform</h3>
+
+- 这种方式比较常用, 父子元素都不确定宽高的情况也适用
+- 如果子元素的宽高确定的化,`translate`中的值也可以设置伪子元素宽高的一半,即transform: translate(-100px,-100px)
+- 使用决定定位 + tansform, 给元素添加如下样式
+```css
+.op4{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%); /*translate的百分比是基于元素自身的宽高,而不是父元素的宽高*/
+}
+```
+
+#### <h3 id="9_5">9.5 grid的双center法  justify-self  align-self center</h3>
+
+- 使用grid布局
+- 这种方式适用于父元素高度确定的情况, 有关grid布局的适用可以参考 [CSS Grid 网格布局教程](http://www.ruanyifeng.com/blog/2019/03/grid-layout-tutorial.html)
+```css
+.par_po5{
+    display: grid;
+    height: 500px;
+}
+.son_po5{
+    align-self: center;/*设置单元内容的垂直位置*/
+    justify-self: center;/*设置单元格内容的水平位置*/
+}
+```
+
+#### <h3 id="9_6">9.6 父元素display: table-cell;    vertical-align: middle;  子元素：margin:auto;</h3>
+
+- 使用table-cell实现
+- 这种方式需要父元素的宽高都是确定的,才能保证子元素在父元素中垂直水平居中
+
+```css
+.par_po6{
+    height: 500px;
+    width: 500px;
+    display: table-cell;
+    vert-align: middle;
+    text-align: center;
+}
+.son_po6{
+    display: inline-block;
+}
+
+```
 
 ### <h2 id="10">`visibility:hidden`和`display:none`区别</h2>
 

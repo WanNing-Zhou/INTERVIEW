@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <style>
+    .parent{
+      height: 400px;
+      width: 400px;
+      text-align: center;
+      background: #cae8ca;
+    }
+
+    /*子元素变为行内块，父元素text-align:center水平居中。子元素vertical-align:middle数值居中*/
+    .son{
+      width: 200px;
+      height: 200px;
+      display: inline-block;
+      vertical-align: middle;
+      background-color: skyblue;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="parent">
+    <div class="son">这个是子盒子</div>
+  </div>
+</body>
+</html>
