@@ -36,6 +36,14 @@
             border: 3px solid red;
         }
 
+        /*固定定位*/
+        p.pos_fixed
+        {
+            position:fixed;
+            top:30px;
+            right:5px;
+        }
+
         /*relative定位*/
         h2.pos_left
         {
@@ -46,6 +54,24 @@
         {
             position:relative;
             left:20px;
+        }
+
+        /* absolute定位   */
+
+        .relative_box{
+            width: 200px;
+            height: 200px;
+            background: cadetblue;
+            position: relative;
+        }
+
+        .absolute_box{
+            width: 100px;
+            height: 100px;
+            background: orange;
+            position: absolute;
+            left: 50px;
+            top: 50px;
         }
 
     </style>
@@ -76,6 +102,15 @@
     <h2>fixed定位</h2>
     <div>元素的位置相对于浏览器窗口是固定位置</div>
     <div>即使是窗口滚动的它也不会移动</div>
+    <div>Fixed定位在IE7和IE8下需要描述!DOCTYPE才能支持</div>
+    <div>Fixed定位使元素的位置与文档六无关,因此不占据空间</div>
+    <div>Fixed定位的元素和其他元素重叠</div>
+</div>
+
+<div class="test_box">
+    <p class="pos_fixed">这是开启fixed定位的元素</p>
+    <p><b>注意:</b> IE7 和 IE8 支持只有一个 !DOCTYPE 指定固定值.</p>
+    <p>Some text</p><p>Some text</p><p>Some text</p><p>Some text</p><p>
 </div>
 
 <div class="narration">
@@ -90,6 +125,20 @@
     <p>相对定位会按照元素的原始位置对该元素进行移动。</p>
     <p>样式 "left:-20px" 从元素的原始左侧位置减去 20 像素。</p>
     <p>样式 "left:20px" 向元素的原始左侧位置增加 20 像素。</p>
+</div>
+
+<div class="narration">
+    <h2>absolute定位</h2>
+    <div>绝对定位的元素的位置相对于最近的已定位父元素,如果没有已定位的父元素,那么他的位置相对于 html </div>
+    <div>注意:</div>
+    <div>absolute定位使元素的位置与文档流无关,因此不占据空间</div>
+    <div>absolute定位的元素和其他元素重叠+</div>
+</div>
+
+<div class="test_box">
+    <div class="relative_box">relative定位的元素
+        <div class="absolute_box">absolute定位的元素</div>
+    </div>
 </div>
 
 </body>
