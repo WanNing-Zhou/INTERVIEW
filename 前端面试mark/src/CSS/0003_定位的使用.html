@@ -74,6 +74,17 @@
             top: 50px;
         }
 
+
+        /*粘性定位*/
+        div.sticky {
+            position: -webkit-sticky; /*兼容Safari浏览器*/
+            position: sticky;
+            top: 0;
+            padding: 5px;
+            background-color: #cae8ca;
+            border: 2px solid #4CAF50;
+        }
+
     </style>
 </head>
 <body>
@@ -138,6 +149,33 @@
 <div class="test_box">
     <div class="relative_box">relative定位的元素
         <div class="absolute_box">absolute定位的元素</div>
+    </div>
+</div>
+
+<div class="narration">
+    <h2>sticky定位</h2>
+    <div>sticky 英文自卖你意思是粘,粘贴, 所以可以把它称之为粘性定位</div>
+    <div>postion: sticky; 基于用户的滚动位置来定位</div>
+    <div>粘性定位的元素是依赖于用户的滚动,在 position:relative 与 position:fixed定位之间切换</div>
+    <div>它的行为就像position:relative;而当页面滚动超出目标区域时, 它的表现就像position:fixed; 它会固定在目标位置</div>
+    <div>元素定位表现在跨越特定阈值为相对定位,之后为固定定位</div>
+    <div>这个特定域指指的是top,right,bottom或left之一,换言值,指定top,right,bottom或left四个阈值其中之一,才可使粘性定位生效,否则其行为与相对定位相同</div>
+    <div>注意:internet Explorer,Edge 15以及更早IE版本不支持sticky,Safari需要使用  -webkit- prefix</div>
+</div>
+
+<div class="test_box">
+    <p>尝试滚动页面。</p>
+    <p>注意: IE/Edge 15 及更早 IE 版本不支持 sticky 属性。</p>
+
+    <div class="sticky">我是粘性定位!</div>
+
+    <div style="padding-bottom:2000px">
+        <p>滚动我</p>
+        <p>来回滚动我</p>
+        <p>滚动我</p>
+        <p>来回滚动我</p>
+        <p>滚动我</p>
+        <p>来回滚动我</p>
     </div>
 </div>
 

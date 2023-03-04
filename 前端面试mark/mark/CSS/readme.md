@@ -24,7 +24,7 @@ ____
     - [3.1 BFC(Block Formatting Contexts)块级格式化上下文](#3_1)
     - [3.2 IFC(Inline Formatting Contexts)行内格式化上下文](#3_2)
 - [4.清除浮动方式](#4)
-- []()
+- [5. CSS中position(定位)使用](#5)
 - []()
 - []()
 - []()
@@ -227,7 +227,7 @@ inner里面margin： 0 200px 0 150px；
 
 ### <h2 id="3">3.什么是BFC,IFC</h2> 
 
-<h3 id="3_1">3.1 BFC(Block Formatting Contexts)块级格式化上下文</h3>
+#### <h3 id="3_1">3.1 BFC(Block Formatting Contexts)块级格式化上下文</h3>
  
 
 块级格式化上下文使页面上的一块渲染区域, 这块区域由符合条件的容器产生.
@@ -285,7 +285,7 @@ inner里面margin： 0 200px 0 150px；
 12. column-span: all的元素
 ```
 
-<h3 id="3_2">3.2 IFC(Inline Formatting Contexts)行内格式化上下文</h3>
+#### <h3 id="3_2">3.2 IFC(Inline Formatting Contexts)行内格式化上下文</h3>
 
 行内格式化上下文的布局首先要根据水平, 垂直和左右书写模式来说明:
 
@@ -422,7 +422,105 @@ inner里面margin： 0 200px 0 150px；
 - 实现效果:  
 ![img_5.png](img_5.png)
 
-### <h2 id=""></h2>
+### <h2 id="5">5. CSS中position(定位)使用</h2>
+
+<h3>static定位(静态定位)</h3>
+
+HTML元素的默认值,即没有定位,遵循正常的文档流对象  
+静态定位的元素不会受到top,bottom,left,right影响  
+
+```css
+div.static {
+    position: static; /*静态定位,HTML元素默认值*/
+    border: 3px solid #73AD21;
+}
+```
+
+<h3>fixed定位(固定定位)</h3>  
+
+元素的位置相对于浏览器窗口是固定位置  
+即使窗口是滚动的它也不会移动  
+
+**特点**:  
+- 固定定位之后,不占据原来的位置(脱标)
+- 元素使用固定定位之后,位置从浏览器出发
+``` css
+p.pos_fixed
+{
+    position:fixed; /*固定定位*/
+    top:30px;
+    right:5px;
+}
+```
+
+
+<h3>relative定位(相对定位)</h3>
+
+相对定位元素的定位是相对其正常位置
+
+**特点**:
+- 使用相对定位,位置从自身出发  
+- 还占据原来的位置(不脱标)
+- 子绝夫相(父元素相对定位,子元素绝对定位)
+- 行内元素使用相对定位不能转行内块
+
+```css
+h2.pos{
+    position: relative;
+    left: -20px;
+}
+```
+
+<h3>absolute定位(绝对定位)</h3>
+
+绝对定位的元素的位置相对于最近的已定位父元素,如果元素没有已定位的父元素,
+那么它的位置相对于`<html>`
+
+**特点**:  
+- 元素使用绝对定位之后不占据原来的位置(脱标)  
+- 元素使用绝对定位,位置是从浏览器出发  
+- 嵌套的盒子,父盒子没有使用定位,子盒子绝对定位,子盒子位置是从浏览器出发  
+- 嵌套的盒子,父元素使用定位, 子盒子绝对定位,子盒子位置是从父元素位置出发
+
+```css
+h2 {
+    position:absolute;
+    left:100px;
+    top:150px;
+}
+```
+
+<h3>sticky定位:粘性定位</h3>
+
+粘性定位的元素是依赖于用户的滚动,在 position:relative 与 position:fixed定位之间切换
+
+它的行为就像position:relative;而当页面滚动超出目标区域时, 它的表现就像position:fixed; 它会固定在目标位置
+元素定位表现在跨越特定阈值为相对定位,之后为固定定位
+
+这个特定域指指的是top,right,bottom或left之一,换言值,指定top,right,bottom或left四个阈值其中之一,才可使粘性定位生效,否则其行为与相对定位相同
+
+粘性定位的元素是依赖于用户的滚动,在 position:relative 与 position:fixed定位之间切换
+它的行为就像position:relative;而当页面滚动超出目标区域时, 它的表现就像position:fixed; 它会固定在目标位置
+元素定位表现在跨越特定阈值为相对定位,之后为固定定位
+这个特定域指指的是top,right,bottom或left之一,换言值,指定top,right,bottom或left四个阈值其中之一,才可使粘性定位生效,否则其行为与相对定位相同
+
+**特点**:   
+top,right,bottom,left四个属性中至少设置一个具体值,  
+当小于这个距离时呈现fixed,大于时呈现relative
+
+```css
+div.sticky {
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 0;
+    background-color: green;
+    border: 2px solid #4CAF50;
+}
+```
+
+
+
+
 ### <h2 id=""></h2>
 ### <h2 id=""></h2>
 ### <h2 id=""></h2>
