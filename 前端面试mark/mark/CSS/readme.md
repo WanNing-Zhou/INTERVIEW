@@ -21,9 +21,9 @@ ____
   - [2.1圣杯布局实现过程](#2_1)
   - [2.2双飞翼布局实现过程](#2_2)  
 - [3.什么使BFC,IFC](#3)
-    - [3.1BFC(Block Formatting Contexts)块级格式化上下文](#3_1)
-    - [3.2IFC(Inline Formatting Contexts)行内格式化上下文](#3_2)
-- []()
+    - [3.1 BFC(Block Formatting Contexts)块级格式化上下文](#3_1)
+    - [3.2 IFC(Inline Formatting Contexts)行内格式化上下文](#3_2)
+- [4.清除浮动方式](#4)
 - []()
 - []()
 - []()
@@ -130,6 +130,11 @@ z-index可以是负数,处于auto下面
 </html>
 ```
 
+- 效果展示  
+
+![img_3.png](img_3.png)
+
+
 
 <h3 id="2_2">2.2双飞翼布局实现过程</h3>
 
@@ -215,10 +220,14 @@ inner里面margin： 0 200px 0 150px；
 </html>
 
 ```
+- 效果展示  
+
+![img_4.png](img_4.png)
+
 
 ### <h2 id="3">3.什么是BFC,IFC</h2> 
 
-<h3 id="3_1">3.1BFC(Block Formatting Contexts)块级格式化上下文</h3>
+<h3 id="3_1">3.1 BFC(Block Formatting Contexts)块级格式化上下文</h3>
  
 
 块级格式化上下文使页面上的一块渲染区域, 这块区域由符合条件的容器产生.
@@ -276,7 +285,7 @@ inner里面margin： 0 200px 0 150px；
 12. column-span: all的元素
 ```
 
-<h3 id="3_2">3.2IFC(Inline Formatting Contexts)行内格式化上下文</h3>
+<h3 id="3_2">3.2 IFC(Inline Formatting Contexts)行内格式化上下文</h3>
 
 行内格式化上下文的布局首先要根据水平, 垂直和左右书写模式来说明:
 
@@ -304,6 +313,115 @@ inner里面margin： 0 200px 0 150px；
 
 
 
+### <h2 id="4">4.清除浮动方式</h2>
+
+清除浮动: 清除浮动后造成的影响-->清除浮动主要为了解决父级元素因为浮动引起内部高度为0的问题
+
+1. 额外标签法(在最后一个浮动标签后,新新加一个标签, 给其设置clear: both;)(不推荐)  
+`<div style="clear:both"></div>`  
+   我们清除了浮动,父元素自动检测盒子的高度,然后与其同高  
+   - 优点: 通俗易懂, 方便  
+   - 缺点: 添加无意义标签, 语义化差
+
+2. 父级添加overflow属性, 变成BFC([块级格式化上下文](#3_1)),就可以解决浮动带来的影响(不推荐)  
+   通过除法BFC方式,实现清除浮动  
+   - 优点:代码简洁
+   - 缺点: 内容增多的时候容易造成不会自动换行,导致内容被隐蔽掉,无法显示要溢出的元素
+```css
+    .fahter{
+        width: 400px;
+        border: 1px solid deeppink;
+        overflow: hidden;
+    }
+```
+3. 使用before和after伪元素清除浮动(推荐使用):
+   这种方式也是使用额外标签方式达到效果，只是变相的使用了伪元素after/before，使得页面结构更简介，也是常用的清除浮动的方式
+   - 优点: 符合闭合浮动思想,结构语义化正确
+    - 缺点: ie6-7不支持伪元素：after，使用zoom:1触发hasLayout.
+```css
+.clearfix:after{/*伪元素是行内元素 正常浏览器清除浮动方法*/
+    content: ""; /*元素设置为空*/
+    display: block; /*转换为块级元素*/
+    height: 0; /*高度为0*/
+    clear:both;/*清除浮动*/
+    visibility: hidden;/*将元素隐藏*/
+}
+/*下面为了兼容IE*/
+.clearfix{
+    *zoom: 1;/*ie6清除浮动的方式 *号只有IE6-IE7执行，其他浏览器不执行*/
+}
+```
+- 具体使用
+```html
+
+<body>
+    <div class="fahter clearfix">
+        <div class="big">big</div>
+        <div class="small">small</div>
+        <!--<div class="clear">额外标签法</div>-->
+    </div>
+    <div class="footer"></div>
+</body>
+```
+- 使用before和after双伪元素清除浮动
+    - 优点: 代码更简洁
+    - 缺点: 用zoom:1除法hasLayout
+```css
+
+.clearfix:after,.clearfix:before{
+    content: "";
+    display: table;
+}
+.clearfix:after{
+    clear: both;
+}
+.clearfix{
+    *zoom: 1;
+}
+```
+- 具体使用
+
+```html
+
+ <div class="fahter clearfix">
+        <div class="big">big</div>
+        <div class="small">small</div>
+ </div>
+ <div class="footer"></div>
+```
+
+4. 使用 `display: flow-root`(推荐):  
+   
+   一个新的 `display` 属性的值，它可以创建无副作用的 BFC。在父级块中使用 `display: flow-root` 可以创建新的 BFC。  
+  
+   给 `<div>` 元素设置 `display: flow-root` 属性后，`<div>` 中的所有内容都会参与 BFC，浮动的内容不会从底部溢出。  
+   
+   你可以从 `flow-root` 这个值的名字上看出来，它创建一个新的用于流式布局的上下文，类似于浏览器的根（`html`）元素。
+
+- 具体使用      
+```css
+.box[style] {
+  background-color: aliceblue;
+  border: 5px solid steelblue;
+}
+.float {
+  float: left;
+  width: 200px;
+  height: 100px;
+  background-color: rgba(255, 255, 255, .5);
+  border:1px solid black;
+  padding: 10px;
+}   
+```
+```html
+  <div class="box" style="display:flow-root">
+    <div class="float">I am a floated box!</div>
+    <p>I am content inside the <code>display:flow-root</code> container.</p>
+  </div>
+```
+- 实现效果:  
+![img_5.png](img_5.png)
+
 ### <h2 id=""></h2>
 ### <h2 id=""></h2>
 ### <h2 id=""></h2>
@@ -316,7 +434,41 @@ inner里面margin： 0 200px 0 150px；
 ### <h2 id=""></h2>
 ### <h2 id=""></h2>
 ### <h2 id=""></h2>
-### <h2 id=""></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
