@@ -16,22 +16,32 @@ ____
 
 ### 目录
 
-- [1. z-index的作用和用法](#1)
-- [2. 圣杯布局的实现过程](#2)
-  - [2.1圣杯布局实现过程](#2_1)
-  - [2.2双飞翼布局实现过程](#2_2)  
-- [3.什么使BFC,IFC](#3)
+- [前端面试总结](#前端面试总结)
+  - [目录](#目录)
+  - [1.z-index的作用和用法](#1)
+  - [2.圣杯布局和双飞翼布局](#2)
+  - [3.什么是BFC,IFC](#3)
     - [3.1 BFC(Block Formatting Contexts)块级格式化上下文](#3_1)
     - [3.2 IFC(Inline Formatting Contexts)行内格式化上下文](#3_2)
-- [4.清除浮动方式](#4)
-- [5. CSS中position(定位)使用](#5)
-- [6.CSS3常见的伪类和伪元素选择器](#6)
-- [7.浏览器渲染机制](#7)
-- [8.浏览器地址输入回车显示页面经历了哪些过程](#8)
-- []()
-- []()
-- []()
-- []()
+  - [4.清除浮动方式](#4)
+  - [5. CSS中position(定位)使用](#5)
+  - [6.CSS3常见的伪类和伪元素选择器](#6)
+  - [7.浏览器渲染机制](#7)
+  - [8.浏览器地址输入回车显示页面经历了哪些过程](#8)
+  - [9. css实现水平或垂直居中](#9)
+    - [9.1 absolute + 0000auto法:](#9_1)
+    - [9.2 absolute + 50%法](#9_2)
+    - [9.3 flex的双center法](#9_3)
+    - [9.4 使用绝对定位 + transform](#9_4)
+    - [9.5 grid的双center法  justify-self  align-self center](#9_5)
+    - [9.6 父元素display: table-cell;    vertical-align: middle;  子元素：margin:auto;](#9_6)
+  - [10 `visibility:hidden`和`display:none`区别](#10)
+  - [11. 简单说明css的盒子模型](#11)
+  - [12. rgba 和 opacity透明效果有什么区别](#12)
+  - [](#-2)
+  - [](#-3)
+  - [](#-4)
+  - [](#-5)
 
 
 ----
@@ -673,7 +683,7 @@ div.sticky {
     height: 500px;
     width: 500px;
     display: table-cell;
-    vert-align: middle;
+    vertical-align: middle;
     text-align: center;
 }
 .son_po6{
@@ -682,8 +692,47 @@ div.sticky {
 
 ```
 
-### <h2 id="10">`visibility:hidden`和`display:none`区别</h2>
+### <h2 id="10">10 `visibility:hidden`和`display:none`区别</h2>
 
+1. 作用不同  
+    visibity: hidden ---将元素隐藏, 但是在网页中该占的位置还是占着  
+    display: none ---将元素的显示设为无,即在网页中不占任何的位置
+   
+2. 使用后HTML元素有所不同
+    visibility: hidden,使用该属性后, HTML元素(对象)仅仅是在视觉上看不见(完全透明), 而它所占据的空间位置仍然存在
+   也就是说它仍具有 高度,宽度等属性值  
+   display:none, 使用该属性后,HTML元素(对象)的宽度,高度等各种属性值都将"丢失"
+   
+3. 定义不同  
+    visibility 属性指定一个元素是否可见的  
+   display 这个属性用于定义建立布局时元素生成的显示框类型
+
+### <h2 id="11">11. 简单说明css的盒子模型</h2>
+
+分为怪异盒模型, w3c盒模型(标准盒子模型)  
+标准和模型中`width`就是指的是内容区域content的宽度  
+`height`就是指的是内容区域content的高度  
+标准盒模型下盒子的大小 = content + border +padding + margin
+
+怪异和模型中`width`指的是内容,边框,内边距的宽度(content+border+padding)  
+`height`指的是内容,边框,内边距总的高度    
+怪异盒模型下盒子的大小=width(content+border+padding)+marin
+
+### <h2 id="12">12. rgba 和 opacity透明效果有什么区别</h2>
+
+rgba是单纯的**颜色**透明, opacity设置的是**整个元素**的透明效果
+
+r:red g:green b:blue a:透明度(从0-1)  
+0透明 --- 1 完全不透明
+
+opcity属性值, 可以被其**子元素**继承,给父级元素div设置opacity属性,那么所有元素都会继承这个属性,并且
+该元素及其继承该属性的所有子元素的所有内容透明度都会改变
+
+rgba()设置的元素,只对该元素的**背景色**有改变,并且,该元素的后代不会继承该属性
+
+### <h2 id=""></h2>
+### <h2 id=""></h2>
+### <h2 id=""></h2>
 ### <h2 id=""></h2>
 ### <h2 id=""></h2>
 ### <h2 id=""></h2>
