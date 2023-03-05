@@ -38,9 +38,13 @@ ____
   - [10 `visibility:hidden`和`display:none`区别](#10)
   - [11. 简单说明css的盒子模型](#11)
   - [12. rgba 和 opacity透明效果有什么区别](#12)
-  - [](#-2)
-  - [](#-3)
+  - [13.常见的CSS选择器](#13)
+  - [14.css选择器权重](#14)
   - [](#-4)
+  - [](#-5)
+  - [](#-5)
+  - [](#-5)
+  - [](#-5)
   - [](#-5)
 
 
@@ -730,10 +734,38 @@ opcity属性值, 可以被其**子元素**继承,给父级元素div设置opacity
 
 rgba()设置的元素,只对该元素的**背景色**有改变,并且,该元素的后代不会继承该属性
 
-### <h2 id=""></h2>
-### <h2 id=""></h2>
-### <h2 id=""></h2>
-### <h2 id=""></h2>
+### <h2 id="13">13.常见的CSS选择器</h2>
+
+id选择器: `#box`  
+标签选择器: `div`  
+类选择器: `.box`   
+通配符选择器: `*{}`  
+伪类选择器: `p:first-child   p:nth-child(4) p:nth-child(odd/even)  :checked :selection :focus :palceholder`  
+a标签配套的伪类选择器: `a:link a:visited a:hover a:active`  
+伪元素选择器:  `::before   ::after  ::first-letter  ::first-line`  
+后代选择器:  `div h3` (可以跳层去选)  
+子代选择器: `div>p` (只能一层接着一层)  
+相邻选择器(兄弟选择器): `box+p`: 紧跟在box后面的p  `box~p`:在box后面所有的标签    
+并集选择器: `.box4>p, .box4>selection, .box4 a`: 逗号前后都是独立的选择器  
+交集选择器: `div.myclass` (交集选择器是由两个选择器直接连接构成的,其中第一个必须是标签选择器,第二个必须是类选择器或者ID选择器,这两个选择器之间不能由空格,必须连续书写)  
+### <h2 id="14">14.css选择器权重</h2>
+
+!important    
+内联样式(标签内style形式)  
+id选择器  
+类选择器, 属性选择器, 伪类选择器  
+元素,伪元素选择器  
+通配符选择器 0  
+继承的权重最低
+
+### <h2 id="15">15. css隐藏元素方式</h2>
+
+使用css隐藏页面由许多种方法,可以将opacity设为0,将visibility设置为hidden,将display设置为none或者将position设置为absolute然后将位置设置到不可见的区域等
+
+
+### <h2 id="16">16. CSS3新特性</h2>  
+
+1. transition(过渡):   
 ### <h2 id=""></h2>
 ### <h2 id=""></h2>
 ### <h2 id=""></h2>

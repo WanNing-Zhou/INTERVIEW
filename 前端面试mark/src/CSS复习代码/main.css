@@ -1,0 +1,24 @@
+body {
+    background: black;
+    color: white;
+    line-height: 25px;
+    font-size: 18px;
+    letter-spacing: 1px;
+}
+
+ul {
+    margin: 0;
+}
+
+.narration {
+    background: antiquewhite;
+    margin: 10px;
+    color: darkgray;
+}
+
+.test_box {
+    margin: 10px;
+    height: 300px;
+    background: darkgray;
+    overflow: auto;
+}
