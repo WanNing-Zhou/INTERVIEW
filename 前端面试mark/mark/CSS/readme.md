@@ -40,12 +40,15 @@ ____
   - [12. rgba 和 opacity透明效果有什么区别](#12)
   - [13.常见的CSS选择器](#13)
   - [14.css选择器权重](#14)
-  - [](#-4)
-  - [](#-5)
-  - [](#-5)
-  - [](#-5)
-  - [](#-5)
-  - [](#-5)
+  - [15. css隐藏元素方式](#15)
+  - [16. CSS3新特性](#16)
+  - [17. flex布局](#17)
+  - [18. filter(滤镜)的使用](#18)
+  - [19. 渐变](#19)
+    -[19.1 线性渐变](#19_1)
+    -[19.2 径向渐变](#19_2)
+  - [20. CSS动画](#20)
+  - [](#20)
 
 
 ----
@@ -771,7 +774,15 @@ id选择器
     - 以下6个属性在容器上：flex-direction flex-wrap flex-flow justify-content align-items align-content
     - 以下6个属性设置在项目上：order flex-grow flex-shrink flex-basis flex align-self
 4. filter滤镜: 饱和度 对比度 亮度 模糊 阴影 亮度 黑白
-5. 渐变
+5. 线性渐变: 线性渐变：（渐变类型 起始点 结束点） 径向渐变
+6. 文字阴影 text-shadow:水平阴影 垂直阴影 模糊距离 阴影颜色
+7. 边框圆角：border-radius：左上角 右上角 右下角 左下角
+8. 盒子阴影：box-shadow:水平阴影 垂直阴影 模糊距离 阴影颜色
+9. 选择器：p:first-of-type选择父元素首个P元素的每个P元素
+10. transform：rotate(30deg)   transform:translate(30px,30px);
+11. grid布局：  
+设置在网格容器上的属性：grid-template-columns/rows:40px 50px auto 50px   
+grid-template-areas:"header header header" "main main main" "footer footer footer"   生成三行 四列的网格
 ### <h2 id="17">17. flex布局</h2>
 
 - 定义在容器上: 
@@ -956,7 +967,17 @@ size 参数定义了渐变的大小。它可以是以下四个值：
 
 ![img_13.png](img_13.png)
 
-### <h2 id="20"></h2>
+### <h2 id="20">20. CSS动画</h2>
+transform：  
+``` 
+rotateX(30deg) 绕着x旋转30deg
+rotateY(30deg) 绕着y旋转30deg
+rotateZ(30deg) 绕着z旋转30deg
+translateX(30px) 沿着x轴移动30px
+translatey(30px) 沿着y轴移动30px
+translatez(30px) 沿着Z轴移动30px( 必须给父盒子加透视)
+```
+
 ### <h2 id="21"></h2>
 ### <h2 id="21"></h2>
 ### <h2 id="21"></h2>
