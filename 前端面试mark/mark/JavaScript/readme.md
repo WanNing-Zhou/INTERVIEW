@@ -514,9 +514,469 @@ add();
 >
 > 直观的说就是形成一个不销毁的栈环境。
 
+#### <h3 id="16_1">对js闭包的理解以及常见应用场景(闭包的作用)</h3> 
+
+使用闭包住哟啊为了设计私有的方法和变量
+
+- 优点是可以避免环境变量的污染
+- 缺点是闭包会长驻内存,ui增大内存的使用量,使用不当很容易造成内容泄露
+
+在js中, 函数及闭包,函数才会产生作用域的概念
+
+参考资料:  
+
+[面试官：谈谈对JS闭包的理解及常见应用场景(闭包的作用)](https://blog.csdn.net/qq_39903567/article/details/115010640)
+
+
+
+### <h2 id="17">17.js获取和添加节点方法</h2>
+
+**获取：**
+
+通过 id 找到 HTML 元素
+
+```js
+document.getElementById("demo");
+```
+
+通过标签名找到 HTML 元素
+
+```js
+document.getElementsByTagName("div");
+```
+
+通过类名找到 HTML 元素
+
+```js
+document.getElementsByClassName("a");
+```
+
+h5新增方法
+
+document.querySelector和document.querySelectorAll
+
+添加: 
+1. 父节点.appendChild()
+2. 夫界定啊insertBefore(要插入的节点,参考节点)
+
+
+### <h2 id="18">18. 线程与进程</h2>
+1. 线程是执行程序的最小单位, 而进程是操作系统分配资源的最小单位  
+
+2. 一个进程由由一个或多个线程组成, 线程是一个进程中代码的不同执行路线
+
+3. 进程之间互相独立,但同一个进程下的各个线程之间共享程序的内存控件(包括代码段,数据集,堆等)
+及一些进程的资源(如打开文件和信号等),某进程的线程在其他进程不可见
+   
+4. 调度和切换: 线程上下文切换比进程上下文切换要快的多
+
+### <h2 id="19">19. async和await</h2>
+
+```
+    async
+    async是一个加载函数前的修饰符,被async定义的函数会默认返回一个Promise对象resolve的值,因此堆async函数可以直接then,
+    返回值就是then方法传入的函数
+    
+    await
+    await也是一个修饰符,只能放在async定义的函数内,额可以理解为等待,
+    await修时的如果是Promise对象: 可以获取Promise中返回的内容
+    (resolve或reject的参数), 且取值后语句才会向下执行;
+    如果不是Promise对象: 把这个非Promise的东西当作await表达式的结果
+```
+
+
+### <h2 id="20">20. for in 和 for of 的区别</h2>
+
+`for in` 遍历的是一个对象的索引, 而`for of `遍历的时候数组元素的值,  
+`for in` 总是得到对象的 `key` 或 数组和字符串 的下标
+`for of` 总是得到的数组,字符串的值
+
+for of适用遍历数/数组对象/字符串/map/set等拥有迭代器对象（iterator）的集合，但是不能遍历对象，
+因为没有迭代器对象，但如果想遍历对象的属性，你可以用for in循环（这也是它的本职工作）或用内建的Object.keys()方法
+
+示例:
+
+```javascript
+let arr = [1,2,3]
+Array.prototype.a = 123
+
+for (let index in arr) {
+    let res = arr[index]
+    console.log(res)
+}
+//1 2 3 123
+
+for(let index in arr) {
+    if(arr.hasOwnProperty(index)){
+        let res = arr[index]
+        console.log(res)
+    }
+}
+// 1 2 3
+
+```
+
+### <h2 id="21">对深拷贝和浅拷贝有了解吗为什么会出现深拷贝和浅拷贝这两种概念</h2>
+
+首先深复制和浅复制只针对像 Object, Array 这样的复杂对象的。
+简单来说，浅复制只复制一层对象的属性，而深复制则递归复制了所有层级。
+
+浅复制只会将对象的各个属性进行依次复制，
+并不会进行递归复制，而 JavaScript 存储对象都是存地址的，
+所以浅复制会导致 [obj.arr](https://www.zhihu.com/search?q=obj.arr&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra={"sourceType"%3A"answer"%2C"sourceId"%3A46220227})
+和 shallowObj.arr 指向同一块内存地址
+
+而深复制则不同，它不仅将原对象的各个属性逐个复制出去，
+而且将原对象各个属性所包含的对象也依次采用深复制的方法**递归复制**到新对象上。
+这就不会存在上面 obj 和 shallowObj 的 arr 属性指向同一个对象的问题。
+
+需要注意的是，如果对象比较大，层级也比较多，深复制会带来性能上的问题。
+在遇到需要采用深复制的场景时，可以考虑有没有其他替代的方案。在实际的应用场景中，也是浅复制更为常用。
+
+
+### <h2 id="22">22.扩展运算符</h2>
+
+**定义:**
+扩展运算符(...)是ES6的语法, 用于取出参数对象的所有可遍历属性,然后拷贝到当前对象中, (在react setStatus和redux的reducer中经常使用)
+
+**基本用法:**
+```javascript
+let person = {name:'Amy', age: 15}
+let someone = {...person}
+//someone // {name:'Amy',age:'15'}
+```
+**特殊用法:** 
+
+**数组**
+
+由于数组是特殊的对象, 所以对象的扩展也能算符可以用于数组  
+```javascript
+let foo = {...['a','b','c']};
+foo
+// {0:'a', 1:'b', 2:'c'}
+```
+
+**空对象**
+
+如果扩展运算符后面是一个空对象, 则没有任何效果
+```javascript
+    let a = {...{},a:1}
+    a // { a : 1 }
+```
+
+**Int 类型, Boolean类型, undefined, null**
+
+如果扩展运算符后面是上面这几种类型,都会返回一个空对象,因为他们没有自身属性
+
+```
+// 等同于 {...Object(1)}
+{...1} // {}
+
+// 等同于 {...Object(true)}
+{...true} // {}
+
+// 等同于 {...Object(undefined)}
+{...undefined} // {}
+
+// 等同于 {...Object(null)}
+{...null} // {}
+```
+
+**字符串**
+如果扩展运算符后面是字符串，它会自动转成一个类似数组的对象
+
+```javascript
+let a = {...'hello'}
+//a == {0: "h", 1: "e", 2: "l", 3: "l", 4: "o"}
+```
+
+对象的合并
+
+```javascript
+let age = {age:15}
+let name = {name:'Amy'}
+let person = {...age,...name}
+person; //{age:15, name:'Amy'}
+```
+
+**注意事项**
+> 自定义的属性和拓展运算符对象里面属性相同的时候;  
+> 自定义的属性在扩展运算符后面, 则扩展运算符对象内部同名的属性将被覆盖掉
+
+```javascript
+let person = {name: "Amy", age: 15};
+let someone = { ...person, name: "Mike", age: 17};
+someone;  //{name: "Mike", age: 17}
+```
+自定义的属性在拓展运算符前面, 则变成设置新对象默认属性值
+```javascript
+let person = {name:'Amy',age:'15'};
+let someone = {name:'Mike',age:'17',...person};
+someone; //{name:'Amy', age:15}
+```
+
+### <h2 id="23">23. 在es5中的变量</h2>
+
+在es5中变量作用域分为两种: 全局变量,局部变量;  
+
+局部变量: 写在函数体内部, 其中安徽拿书中所传递的参数也是局部变量(小括号中的), 
+仅在定义的部分能够使用;  
+
+全局变量: 写在函数体外部的变量, 其中在函数中使用但未用var声明的变量也是全局变量, 可以在全局中任何部分使用
+
+### <h2 id="24">24. 词法作用域和动态作用域</h2>
+
+词法作用域: 函数在定义的时候决定了函数的作用域, JavaScript采用词法作用域
+
+动态作用域: 函数在调用的时候决定函数的作用域,目前只有部分语言支持
+
+### <h2 id="25">25.JavaScript this关键字</h2>
+
+面向对象语言中this表示当前对象的一个引用  
+
+但在JavaScript中this不是固定不变的,它会随着环境的改变而改变
+
+- 在方法中,this表示该方法所属的对象
+- 如果单独使用, this表示全局对象
+- 在函数中, this表示全局对象
+- 在函数中, 在严格模式下, this是未定义的(undefined)
+- 在事件中, this表示接收事件的元素
+- 类似call() 和 apply() 方法可以将this引用到任何对象
+
+### <h2 id="26">26. DOM事件流机制 / 事件捕获</h2>
+ 
+什么是DOM?  
+    DOM 是描述 HTML 的内部数据结构,它会将 Web 页面和 JavaScript 脚本连接起来, 并过滤一些不安全的内容;
+    HTML 解析器会把字节转换成DOM
+   
+一个事件在发生的时候会在子元素和父元素之间传播,这会分成三个阶段:  
+1. window 传到目标节点 ---- 捕获阶段(上层传到底层)
+2. 目标节点触发 ---- 目标阶段
+3. 目标节点传到window ---- 冒泡阶段(底层传到上层)
+
+### <h2 id="27">27. 如何阻止冒泡?</h2>
+
+1. event.stopPropagation()方法 阻止事件冒泡
+```javascript
+	$('.btn').click(function (even) {
+		even.stopPropagation();
+		alert('按钮被点击了');
+	})
+```
+
+这是阻止事件的冒泡方法，不让事件向documen上蔓延，但是默认事件任然会执行，当你掉用这个方法的时候，如果点击一个链接，这个链接仍然会被打开。
+
+例如: 
+
+```html
+<a href="https://www.csdn.net/" class="box">
+	<button class="btn">按钮</button>
+</a>
+```
+
+2. event.preventDefault()方法 阻止默认事件
+
+```javascript
+	$('.btn').click(function (even) {
+		even.preventDefault();
+		alert('按钮被点击了');
+	})
+```
+
+这是阻止默认事件的方法,调用此方方法,链接不会被打开,但是会发生冒泡, 冒泡会传递到上一层的父元素;
+
+3. return false;
+
+```javascript
+	$('.btn').click(function (even) {
+		alert('按钮被点击了');
+		return false;
+	})
+```
+这个方法比较暴力, 他会同时阻止冒泡也会阻止默认事件; 写上这段代码, 链接不会被打开,事件也不会传递到上一层的u父元素; 类似于同时调用了event.stopPropagation()和event.preventDefault()
+
+### <h2 id="28">28. let var const</h2>
+``` 
+    var定义的变量没有块的概念, 可以跨块访问, 不能跨函数访问  
+    let定义的变量,之恶能在块作用域里访问, 不能跨块访问, 也不能跨函数访问
+    const用来定义常量, 使用时必须初始化(即必须赋值), 只能在块作用域里访问,而且不能修改
+
+```
+
+### <h2 id="29">29. 箭头函数</h2>
+```
+    箭头函数没有自己的this，指向外层普通函数作用域
+    箭头函数没有constructor，不能通过new 调用；
+    没有new.target 属性
+    箭头函数不绑定Arguments 对象
+```
+
+
+### <h2 id="30">promise的all和race</h2>
+
+all与then同级的另一个方法, all方法, 该方法提供了并行执行异步操作的能力,并且所有异步操作执行完成后并且执行结果都是成功的时候才执行回调  
+all是等所有异步操作执行完了再执行then方法, 
+
+race方法就是相反的,谁先执行完成就先执行回调,执行完的不管是进行了race的成功回调还是失败回调,其余的将不会再进入race的任何回调
+
+### <h2 id="31">JS闭包</h2>
+
+闭包是指有权访问另一个函数作用域中变量的函数,创建闭包的最常见的方式就是在一个函数内创建另一个函数,通过另一个安徽拿书访问呢这个函数的局部变量  
+
+- 闭包的特性:
+    - 函数内再嵌套函数  
+    - 内部函数可以引用外层的参数和变量
+    - 参数和变量不会被垃圾回收机制回收
+    
+- 标记清除 
+
+这是JavaScript中最常用的垃圾回收方式; 当变量进入执行环境时,就标记这个变量为"进入环境";
+  从逻辑上讲,永远不能释放进入环境的变量占用的内存, 因为只要执行流进入相应的环境,就可能会用到他们, 
+  当变量离开环境时,则将其标记为"离开环境"
+
+- 引用计数
+
+另一种不太常见的垃圾回收策略是引用计数。引用计数的含义是跟踪记录每个值被引用的次数。
+当声明了一个变量并将一个引用类型赋值给该变量时，
+则这个值的引用次数就是1。相反，如果包含对这个值引用的变量又取得了另外一个值，
+则这个值的引用次数就减1。当这个引用次数变成0时，则说明没有办法再访问这个值了，
+因而就可以将其所占的内存空间给收回来。这样，垃圾收集器下次再运行时，它就会释放那些引用次数为0的值所占的内存。
+
+
+### <h2 id="32">32. 深拷贝和浅拷贝</h2>
+首先深复制和浅复制只针对像 Object, Array 这样的复杂对象的。
+简单来说，浅复制只复制一层对象的属性，而深复制则递归复制了所有层级。
+
+浅复制只会将对象的各个属性进行依次复制，并不会进行递归复制，
+而 JavaScript 存储对象都是存地址的，所以浅复制会导致 [obj.arr](https://www.zhihu.com/search?q=obj.arr&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra={"sourceType"%3A"answer"%2C"sourceId"%3A46220227}) 
+和 shallowObj.arr 指向同一块内存地址
+
+而深复制则不同，它不仅将原对象的各个属性逐个复制出去，
+而且将原对象各个属性所包含的对象也依次采用深复制的方法**递归复制**到新对象上。
+这就不会存在上面 obj 和 shallowObj 的 arr 属性指向同一个对象的问题。
+
+需要注意的是，如果对象比较大，层级也比较多，
+深复制会带来性能上的问题。在遇到需要采用深复制的场景时，
+可以考虑有没有其他替代的方案。在实际的应用场景中，也是浅复制更为常用。
+
+### <h2 id="33">33. set和map的区别</h2>
+
+set和map一样是关联容器, 他们的底层都是红黑树, 区别在于map的值不作为键, 键和值是分开的
+
+set特性如下:
+- set以RBTree作为底层容器
+- 所得元素的只有key没有value，value就是key
+- 不允许出现键值重复
+- 所有的元素都会被自动排序
+- 不能通过迭代器来改变set的值，因为set的值就是键
+
+map特性如下:
+- map以RBTree作为底层容器
+- 所有元素都是键+值存在
+- 不允许键重复
+- 所有元素是通过键进行自动排序的
+- map的键是不能修改的，但是其键对应的值是可以修改的
+
+
+### <h2 id="34">34. promise和setTimeout及asyn,awit的区别是什么</h2>
+
+1、JS是单线程语言，包括同步任务、异步任务，异步任务又包括宏观任务和微观任务
+
+2、执行顺序：同步任务——>微观任务——>宏观任务
+
+3、宏观任务的方法有：script(整体代码)、setTimeout、setInterval、
+I/O、UI交互事件、postMessage、MessageChannel、setImmediate(Node.js 环境)
+
+4、微观任务的方法有：Promise.then、
+MutaionObserver、process.nextTick(Node.js 环境)，
+async/await实际上是promise+generator的语法糖，也就是promise，也就是微观任务
+
+
+### <h2 id="35">35. JS的垃圾回收机制</h2>
+答：**[垃圾回收](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Memory_Management#garbage_collection)** 是一个术语，
+在 [计算机编程 (en-US)](https://developer.mozilla.org/en-US/docs/Glossary/Computer_Programming)中用于描述查找和删除那些不再被其他[对象引用 (en-US)](https://developer.mozilla.org/en-US/docs/Glossary/Object_reference)的[对象](https://developer.mozilla.org/zh-CN/docs/Glossary/Object) 处理过程。
+换句话说，垃圾回收是删除任何其他对象未使用的对象的过程。 
+垃圾收集通常缩写为 "GC"， 是[JavaScript](https://developer.mozilla.org/zh-CN/docs/Glossary/JavaScript)中使用的内存管理系统的基本组成部分。
+
+为什么需要垃圾回收？
+遇到函数时会创建函数执行上下文放到栈顶，执行完毕后，从栈顶弹出，作用域随之销毁。
+如果在作用域被销毁的过程中，其中的变量不被回收持久的存在内存中
+，必然会导致内存暴增，引发内存泄漏导致程序的性能直线下降甚至崩溃。
+
+如何避免内存泄漏？
+
+1.尽可能少创建全局变量
+
+2.手动清除定时器
+
+3.少用闭包。
+
+weakmap和weakset就是为了解决内存泄漏的问题诞生的，表示为弱引用。
+
+
+### <h2 id="36">懒加载有哪些内容</h2>
+
+懒加载(Load On Demand)是一种独特而又强大的数据获取方法,
+它能够在用户滚动页面的时候自动获取更多的数据,而新得到的数据不会影响原有数据的显示,
+同时最大程度上减少服务器端的资源耗用。
+
+
+### <h2 id="37">JS的数据类型都有哪些</h2>
+
+分为基础数据类型和复杂数据类型，分别是
+
+number string Boolean object array symbol function undefined null
+
+### <h2 id="38">38. 除了const以外可以用什么方式让变量不能被更改</h2>
+
+Object.freeze() 方法可以冻结一个对象。一个被冻结的对象再也不能被修改；冻结了一个对象则不能向这个对象添加新的属性，不能删除已有属性，
+不能修改该对象已有属性的可枚举性、可配置性、可写性，以及不能修改已有属性的值。此外，冻结一个对象后该对象的原型也不能被修改。
+freeze() 返回和传入的参数相同的对象。
+
+### <h2 id="39">39. url的组成部分</h2>
+
+协议：//域名：端口号/虚拟目录/文件目录/#锚点部分？请求参数
+
+### <h2 id="40">40. js中获取url的信息是什么</h2>
+
+在js的**window.location**身上可以获取到url地址信息
+
+此函数对特殊字符进行编码，除了： , / ? : @ & = + $ #（请使用 encodeURIComponent() 对这些字符进行编码）。
+
+### <h2 id="41">41. 为什么要使用路由呢？</h2>
+
+ajax异步请求完成页面的无缝刷新，导致浏览器的url不会发生任何变化就完成了请求。  
+同时本次浏览的页面内容在用户下次使用url进行访问的时候无法重新呈现，使用路由可以很好的解决这个问题。
+
+路由实现三个功能：  
+1.当浏览器地址变化时，切换页面。  
+2.前进后退  
+3.刷新浏览器时，网页还加载当前浏览器对应的内容。  
+
+两种模式hash和history模式  
+
+hash模式：    
+可以用过onhashchange监听浏览器url变化，#后面的也叫锚点，就是它的散列值，hash值  
+散列值改变不会向服务器发送请求，hash值变化浏览器不会向服务器发送任何请求  
+监听hashchange方法，当hash改变时，用local.hash获取hash值  
+
+history模式：    
+window.history的history指的是浏览历史，改变时只会改变页面路径 不会刷新页面  
+可以通过history.length获得页面的个数  
+浏览器的前进后退其实就是在对history对象进行操作    
+history.back()后退  history.forward()前进  history.go()  1 前进 -1后退 0 刷新页面    
+history.pushState(),可以添加浏览记录 三个参数 1.新的对象 2.标题  3.新的网站    
+history.replacestate(),修改历史记录    
+popstate进行history历史记录监听，前进后退或者back  forward go都会触发，    
+缺点：当改变地址时，会强制刷新页面。  
+
+
 
 
 
 ### <h2 id=""></h2>
 ### <h2 id=""></h2>
-### <h2 id=""></h2>
+
+
+
+
