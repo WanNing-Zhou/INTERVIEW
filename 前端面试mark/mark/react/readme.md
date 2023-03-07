@@ -293,14 +293,56 @@ immutable是心啊原理是持久化数据结构,结构共享, 避免对数据�
 |区别|react|vue|
 |:---|:---|:---|
 |模板引擎| JSX,更多灵活,纯js语法(可以通过babel插件实现模板引擎)| vue template,指令，更加简单 （vue也可以使用jsx语法）|
-|复用|
+|复用|Mixin->Hoc->render props->hook|Mixin-> slot->Hoc(比较用，模板套模板，奇怪做法)-> vue3.0 function baseed APi|
+|性能优化方式|手动优化：PureComponent/shouldComponentUpdate|自动优化：精确监听数据变化|
+|监听数据变化的实现原理|手动：通过比较引用的方式（diff）|自动：getter/setter以及一些函数的劫持（当state特别多的时候，当watcher也会很多，导致卡顿）|
+|数据流|	数据不可变，单向数据流，函数式编程思想|数据可变，双向数据绑定，（组件和DOM之间的），响应式设计|
+|设计思想|all in js (html->jsx, css->style-component/jss)|html,,css,js写在一个文件中，使用各自的方式|
+|功能内置|少（交给社区，reactDom,propType）|多（使用方便）|
+|优点|大型项目更合适|兼容老项目，上手简单|
+
+
+react 数据更改逻辑：  
+
+![img_2.png](img_2.png)
+
+vue数据更改逻辑：
+
+![img_3.png](img_3.png)
 
 
 
+## <h2 id="18">18. 让react支持vue的template语法如何实现?</h2>
 
+基于抽象语法树AST，实现解析模板指令的插件（应该是实现一个babel插件，因为jsx解析成js语法，是通过babel解析的）
 
+![img_4.png](img_4.png)
 
+## <h2 id="19">19. 对react的看法，它的优缺点？</h2>
 
+优点：  
+
+1. 提供了声明式的编程思想   
+2. 提供了组件化的开发思想，大大提高前端开发的效率  
+3. 引入了虚拟dom的概念，使得react可以跨端进行类各界面开发，react native,react vr,ssr;  
+4. 引入了diff算法，提高了渲染效率  
+
+不足：  
+
+侵入性强，对老代码只能重做，不能部分集成（比如vue）；  
+## <h2 id="20">20. jsx语法有什么特点相比js?</h2> 
+
+> jsx以js为中心来写html代码
+## <h2 id=""></h2>
+## <h2 id=""></h2>
+## <h2 id=""></h2>
+## <h2 id=""></h2>
+## <h2 id=""></h2>
+## <h2 id=""></h2>
+## <h2 id=""></h2>
+## <h2 id=""></h2>
+## <h2 id=""></h2>
+## <h2 id=""></h2>
 
 
 
