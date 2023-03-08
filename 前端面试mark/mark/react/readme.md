@@ -925,10 +925,120 @@ react异步说明:
 > 多次setState后面的值会覆盖前面的
 
 ## <h2 id="51">51 为什么setState不设计成同步的？</h2>
-## <h2 id="50">50 </h2>
-## <h2 id="50">50 </h2>
-## <h2 id="50">50 </h2>
-## <h2 id="50">50 </h2>
+
+- 保持内部的一致性，和状态的安全性
+保持state,props.refs一致性；
+
+- 性能优化
+react会对依据不同的调用源，给不同的 setState调用分配不同的优先级；
+
+调用源包括：事件处理、网络请求、动画 ；
+
+- 更多可能性
+异步获取数据后，统一渲染页面；保持一致性，
+
+# <h1 id="seven">react事件</h1> 
+
+## <h2 id="52">52. react事件机制?</h2>  
+
+#### 一、事件注册  
+
+- 【组件装载】装载/更新
+- 【事件注册与卸载】能过lastProps，nextProps判断是否有新增、删除事件分别调用事件注册、卸载方法
+- 【事件存储】能过eventPluginHub, enqueuePutListener 进行事件存储
+- 【获取document对象】
+- 【事件冒泡/捕获】根据事件名称（onClick,onCaptureClick）判断 
+- 【事件监听】：addEventListener,addachEvent(兼容IE)
+- 【注册原生事件】给document注册原生事件回调为dispatchEvent (统一的事件分发机制)
+
+#### 二 事件存储
+
+```js
+{
+onClick:{
+ fn1:()=>{}
+ fn2:()=>{}
+},
+onChange:{
+ fn3:()=>{}
+ fn4:()=>{}
+}
+}
+```
+
+#### 三 事件触发/执行
+
+```
+事件执行顺序(原生事件与合成事件)
+```
+1. dom child
+2. dom parent
+3. react child
+4. react parent
+5. dom document
+
+#### 四、合成事件
+
+- 【调用EventPluginHub】 的 extractEvents 方法
+- 【遍历所有EventPlugin】 用来处理不同事的工具方法
+- 【返回事件池】在每个 EventPlugin 中根据不同的事件类型返回
+- 【取出合成事件】从事件池中取出，如为空，则创建
+- 【取出回调函数】根据元素nodeid(唯一标识key) 和事件类型 从listenerBink 中取出 回调函数
+- 【返回合成事件】返回带有合成事件参数的回调函数
+
+![img_7.png](img_7.png)
+
+## <h2 id="53">53 react事件与原生事件的区别？</h2>
+
+
+**语法区别：**
+
+- 【事件名小驼峰】react事件命令采用小驼峰式，而不是纯小写
+- 【事件方法函数】使用JSX语法时，你需要传入一个函数作为事件处理函数，而不是一个字符串
+
+**react事件的优点:**
+
+【兼容性更强】合成事件：react事件对生成事件进行了包装，处理了浏览器兼容性问题（阻止浏览器默认行为，阻止冒泡）
+
+## <h2 id="54">54 react事件与原生事件的执行顺序？</h2>
+
+1. 原生事件，依次冒泡执行
+
+2. react合成事件，依次冒泡执行
+
+3. document 事件执行
+
+``` 
+  /*
+     * 执行结果：
+     * 1. dom child
+     * 2. dom parent
+     * 3. react child
+     * 4. react parent
+     * 5. dom document
+     * */
+
+```
+
+## <h2 id="55">55. react事件与原生事件可以混用吗？</h2>  
+
+> react事件与原生事件最好不要混用
+
+原因：
+
+-原生事件如果执行 stopProagation 方法，则会导致其他 react 事件失效，
+因为所有元素的事件将无法冒泡到 document上
+
+# <h1 id="eight">react-router</h1>  
+
+## <h2 id="56">React-Router怎么设置重定向？</h2>
+
+使用 重定向 Api : Redirect
+
+![img_8.png](img_8.png)
+
+## <h2 id="54">54 </h2>
+## <h2 id="55">55 </h2>
 
 
 
