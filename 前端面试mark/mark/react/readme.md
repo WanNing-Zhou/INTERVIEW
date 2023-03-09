@@ -16,36 +16,83 @@ ____
 
 ## 目录 
 
-- []
-  - [] ()
-  - [] ()
-  - [] ()
-  - [] ()
-  - [] ()
-  - [] ()
-  - [] ()
-  - [] ()
-  - [] ()
-  - [] ()
-  - [] ()
-  - [] ()
-  - [] ()
-  - [] ()
-  - [] ()
-  - [] ()
-  - [] ()
-  - [] ()
-  - [] ()
-  - [] ()
-  - [] ()
-  - [] ()
-  - [] ()
-  - [] ()
-  - [] ()
-  - [] ()
-- []
-- []
+- [react基础](#one)
+  - [1. react 如何实现keep-alive?](#1)
+  - [2. react错误处理](#2)
+  - [3. 你有使用过suspense组件吗?](#3)
+  - [4. 怎么动态导入组件，按需加载，代码分割？](#4)
+  - [5. react Context介绍？](#5)
+  - [6.为什么react并不推荐我们优先考虑使用context?](#6)
+  - [7. render函数中return如果没有使用()会用什么问题吗？](#7)
+  - [8. 介绍下渲染属性render props？](#8)
+  - [9. React如何进行组件/逻辑复用？](#9)
+  - [10. PureComponent组件介绍？](#10)
+  - [11. JSX本质是什么？](#11)
+  - [12. react中组件通信的几种方式？](#12)
+  - [13. react UI组件和容器组件的区别与应用？](#13)
+  - [14. react生命周期](#14)
+  - [15. React的请求放在componentWillMount有什么问题？](#15)
+  - [16. create-react-app有什么优点和缺点？](#16)
+  - [17. 介绍下Immutable?](#17)
+  - [react, Vue由什么区别?](#rv)
+  - [18. 让react支持vue的template语法如何实现?](#18)
+  - [19. 对react的看法，它的优缺点？](#19)
+  - [20. jsx语法有什么特点相比js?](#20)
+  - [21.create-react-app 如何实现，包含哪些内容，如何自定义一个脚手架？](#21)
   
+- [HOC](#two)
+  - [22. 什么是高阶函数](#22)
+  - [23. 什么是高阶组件](#23)
+  - [24. hoc存在的问题](#24)
+  - [25. hoc高阶组件使用场景](#25)
+  - [26. 你在项目中怎么使用高阶组件](#26)
+  -[27. 高阶组件和父组件的区别](#27)
+
+- [hook](#three)
+  - [29. hooks与react生命周期的关系](#29)
+  - [30. rect hook 优缺点?](#30)
+  - [31. hooks注意事项？](#31)
+  - [32. react hooks异步操作注意事项？](#32)
+  - [33. react hooks API有哪些？](#33)
+  - [34. useEffect 介绍？](#34)
+  - [35. useEffect和useLayoutEffect区别？](#35)
+  - [36.useContext介绍?](#36)
+  - [37. useReducer介绍？](#37)
+  - [38. useCallBack介绍?](#38)
+  - [39. useState介绍？](#39)
+  - [40. 介绍下useMemo，它和memo有什么区别，分别有哪些适用场景？](#40)
+- [Fiber](#four)
+  - [41. 什么是Fiber？是为了解决什么问题？](#41)
+  
+
+-[refs](#five)
+  - [42. react的refs有什么用，使用场景？](#42)
+  - [43. 创建refs有哪几种形式？]($43)
+  - [44. react中的useRef和createRef有什么区别](#44)
+  - [45, 介绍下forwardRef,它有哪些运用场景 ?](#45)
+
+- [Virtual DOM](#six)
+  - [46, 什么是Virtual DOM, 它的优点](#46)
+  - [47. Virtual DOM的创建,更新,diff过程](#47)
+  - [48. react diff介绍?](#48)
+  
+- [setState](#seven)
+  - [49, setState之后发生了什么？](#49)
+  - [50, setState到底是同步还是异步? ](#50)
+  - [51 为什么setState不设计成同步的？](#51)
+  
+- [react事件](#eight)
+  - [52. react事件机制?](#52)
+  - [53. react事件与原生事件的区别？](#53)
+  - [54. react事件与原生事件的执行顺序？](#54)
+  - [55. react事件与原生事件可以混用吗？](#55)
+  
+- [react-router](#nine)
+  - [56.React-Router怎么设置重定向？](#56)
+  - []()
+  - []()
+  - []()
+
 ----
 
 
@@ -121,7 +168,7 @@ function ProfileTimeline() {
 - require(component): 在特定条件下, 动态引入
 
 
-## <h2 id="5">react Context介绍？</h2>
+## <h2 id="5">5. react Context介绍？</h2>
 
 要api:  
 
@@ -260,7 +307,7 @@ v16.3之后的生命:
 
 
 
-## <h2 id="15"> 15React的请求放在componentWillMount有什么问题？ </h2>
+## <h2 id="15"> 15. React的请求放在componentWillMount有什么问题？ </h2>
 错误观念: componentWillMount中可以提前进行异步请求, 避免白屏问题;
 分析：componentWillMount比 componentDidMount相差不了多少微秒；
 
@@ -288,7 +335,7 @@ v16.3之后的生命:
 
 immutable是心啊原理是持久化数据结构,结构共享, 避免对数据对象进行深拷贝;
 
-## react, Vue由什么区别?
+## <h2 id="rv">react, Vue由什么区别?</h2>
 
 |区别|react|vue|
 |:---|:---|:---|
@@ -336,8 +383,9 @@ vue数据更改逻辑：
 
 jsx语法特点:
 1. 支持js+html 混写
-2.jsx编译更快比html
+   2.jsx编译更快比html
    
+
 有带你: jsx类型安全的,在编译过程中就能发现错误
 
 ## <h2 id="21">21.create-react-app 如何实现，包含哪些内容，如何自定义一个脚手架？</h2>
@@ -360,7 +408,7 @@ jsx语法特点:
 - 是函数  
 - 参数是函数
 - or返回是函数  
-eg: array对象中的map,filter,sort方法都是高阶函数  
+  eg: array对象中的map,filter,sort方法都是高阶函数  
   
 ```js
   function add(x,y,f){
@@ -418,7 +466,7 @@ react-router: withrouter 为一个组件注入history对象;
 - **权限控制**: //也可以在history路由切换的时候,加个监听的方法,在顶层做监听处理,不过页面会闪一下
   - 页面级别：withAdminAuth(Page)，withVIPAuth(Page)
     页面元素级别：
-    
+  
 - **组件渲染性能追踪**  
 - **页面复用**
 - 全局常量(通过接口请求), 通过hoc抽离//也可以通过全局状态管理来获取
@@ -523,7 +571,7 @@ const [state, dispatch] = useReducer(reducer, initialArg, init);
 
 ```
 
-## <h2 id="">34. useEffect 介绍？</h2>
+## <h2 id="34">34. useEffect 介绍？</h2>
 
 > useEffect可以让你在函数组件中执行副使用（数据获取，设置订阅，手动更改React组件中的DOM）操作
 
@@ -687,7 +735,7 @@ const NewMyComponent = memo(MyComponent,(prevProps, nextProps)=>{
   - memo: 缓存组件,避免组件重复渲染
   - useMemo: 缓存组件中的数据，避免计算属性，重复计算
 
-# <h1 id="three">Fiber</h1>
+# <h1 id="four">Fiber</h1>
 
 ## <h2 id="41">41. 什么是Fiber？是为了解决什么问题？</h2>
 
@@ -713,7 +761,7 @@ react在渲染过程时，从setState开始到渲染完成，中间过程是同�
 2. 检查：每次执行完一个小任务，就去对列中检查是否有新的响应需要处理
 3. 继续执行：如果有就执行优化及更高的响应事件，如果没有继续执行后续任务
 
-# <h1 id="Four">refs</h1>
+# <h1 id="five">refs</h1>
 ## <h2 id="42">42. react的refs有什么用，使用场景？ </h2>
 
 1、refs是什么
@@ -806,7 +854,7 @@ forwardRef用在函数组件中,用来转发组件的ref对象给子组件,让�
 - 函数组件当中(需要配合forwardRef使用): 父组件获取子组件的dom节点, 从而触发子组件当中dom原生事件,比如:焦点操作,属性设置
 
 
-# <h1 id="five">Virtual DOM</h1>
+# <h1 id="six">Virtual DOM</h1>
 
 ## <h2 id="46">46, 什么是Virtual DOM, 它的优点 </h2>
 
@@ -880,7 +928,7 @@ react diff算法的优势:
 - snabbdom.js（双端比较算法）：v2.0借鉴
 - inferno.js（速度更快）： vue3.0借鉴
     - 核心思想：利用LIS（最长递增序列）做动态规划，找到最小的移动次数
-  
+
 react 算法 PK inferno.js
 
 - react diff: 
@@ -900,7 +948,7 @@ B:[d,a,b,c]
 
 [diff算法原理概述](diff 算法原理概述)
 
-# <h1 id="six">setState</h1>
+# <h1 id="seven">setState</h1>
 
 ## <h2 id="49">49, setState之后发生了什么？</h2>
 
@@ -937,7 +985,7 @@ react会对依据不同的调用源，给不同的 setState调用分配不同的
 - 更多可能性
 异步获取数据后，统一渲染页面；保持一致性，
 
-# <h1 id="seven">react事件</h1> 
+# <h1 id="eight">react事件</h1> 
 
 ## <h2 id="52">52. react事件机制?</h2>  
 
@@ -1029,12 +1077,11 @@ onChange:{
 -原生事件如果执行 stopProagation 方法，则会导致其他 react 事件失效，
 因为所有元素的事件将无法冒泡到 document上
 
-# <h1 id="eight">react-router</h1>  
+# <h1 id="nine">react-router</h1>  
 
 ## <h2 id="56">React-Router怎么设置重定向？</h2>
 
 使用 重定向 Api : Redirect
 
 ![img_8.png](img_8.png)
-
 
