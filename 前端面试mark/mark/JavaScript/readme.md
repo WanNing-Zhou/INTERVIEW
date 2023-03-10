@@ -382,6 +382,8 @@ const makeRequest = async () => {
 对页面重新渲染, 流程如下
 ```(macro)task->渲染->(macro)task->...```
 
+宏任务是一些独立和离散的工作,有主机(如浏览器或Node.js)发起,例如setTimeout,setInterval,setImmeditate等
+
 **宏任务包括**
 
 ``` 
@@ -397,11 +399,17 @@ setImmediate(Node.js 环境)
 
 **微任务**  
 
+
 microtask,可以理解在当前task执行后立即执行的任务,
 也就是说,在当前task任务后,下一个task之前,在渲染之前;
 
 所以它的响应速度相比setTimeout(setTimeout是task)会更块,因为无需渲染;
 也就是说在某个macrotask执行后,将会将在它执行期间产生的所有microtask都执行完毕(在渲染前)
+
+微任务是一些由JAvaScript本身发起的更小和更快的工作,例如Promise.then,MutationObserver等,
+微任务队列在每个宏任务执行之后执行,直到清空
+
+在ES6规范中,微任务被称为jobs, 而宏任务被称为task
 
 **微任务包括**
 ``` 
@@ -412,6 +420,11 @@ process.nextTick(Node.js 环境)
 
 ```
 
+**宏任务与微任务的执行顺序**   
+
+请参考:  
+[宏任务与微任务的执行顺序](https://blog.csdn.net/m0_46846526/article/details/117909805)
+
 **运行机制**  
 
 在事件循环中,每进行一次循环操作称为tick,这一次tick的任务处理模型是比较复杂的,但关键步骤如下:  
@@ -420,6 +433,11 @@ process.nextTick(Node.js 环境)
 - 宏任务执行完毕后,立即执行当前微任务队列中的所有微任务(依次执行)
 - 当前宏任务执行完毕, 开始检查渲染,然后GUI线程接管渲染
 - 渲染完毕后, JS线程继续接关, 开始下一个宏任务(从事件队列中获取)
+
+
+**事件循环**
+
+![img.png](img.png)
 
 
 ### <h2 id="14">14. es6箭头函数</h2>
@@ -433,9 +451,9 @@ process.nextTick(Node.js 环境)
   
 - - 箭头函数由几个使用注意点:  
     (1) 箭头函数没有自己的this对象, 指向外层函数的对应变量: arguments, super, new.target  
-    (2) 不可当做构造函数,也就是说,不可以对箭头函数使用new命令,否则会抛出一个错误
+    (2) 不可当做构造函数,也就是说,不可以对箭头函数使用new命令,否则会抛出一个错误  
     (3) 另外,由于箭头函数没有自己的this, 所以当然也就不能用call(), apply(), bind()这些方法来改变this的指向  
-    最重要的是第一点, 对于普通函数来说,内部的this指向函数运行时所在的随想,但是这一点对箭头函数不成立;
+    最重要的是第一点, 对于普通函数来说,内部的this指向函数运行时所在的对象,但是这一点对箭头函数不成立;
     它没有自己的`this`对象,内部的`this`就是定义时上层作用域中的`this`,也就是说;
     箭头函数内部`this`指向是固定的,相比之下,普通函数的`this`指向是可变的
     
@@ -1023,7 +1041,7 @@ URI(统一资源标识符)用于定义项目的标识,此处单词标识符标�
 
 URL指定要使用的协议类型,而URI不涉及协议规范
 
-### <h2 id="43">js的显示原型和隐式原型</h2>
+### <h2 id="43">43. js的显示原型和隐式原型</h2>
 
 1. 什么是原型(what)
 
@@ -1103,3 +1121,136 @@ console.log(Person.prototype); //Person { sayHello: [Function] }，因为构造�
 console.log(Person.__proto__); //[Function]，因为构造函数也是一种特殊的对象，有__proto__属性，指向Function.prototype
 
 ```
+
+## <h2>44. JavaScript改变this指向的三种方法</h2>
+
+JavaScript改变this指向的三种方法
+
+每个Function构造构造函数的原型prototype,都有方法, call(), apply(), bind()
+
+1. call方法  
+
+call() 方法调用一个对象。简单理解为调用函数的方式，  
+但是它可以改变函数的 this 指向。
+fun.call(thisArg, arg1, arg2, ...)  
+thisArg：在 fun 函数运行时指定的 this 值  
+arg1，arg2：传递的其他参数  
+返回值就是函数的返回值，因为它就是调用函数  
+```javascript
+var Person = {
+    name: "zhangsan",
+    age: 19
+}
+
+function aa(x, y) {
+    console.log(x + "," + y);
+    console.log(this);
+    console.log(this.name);
+}
+
+aa(4, 5); //this指向window--4,5  window  空
+
+aa.call(Person, 4, 5); //this指向Person--4,5  Person{}对象  zhangsan
+
+```
+
+我们可以使用call()方法来实现继承关系
+```javascript
+       var o = {
+            name: 'andy'
+        }
+
+        function fn(a, b) {
+            console.log(this);
+            console.log(a + b);
+
+        };
+        fn.call(o, 1, 2);
+        // call 第一个可以调用函数 第二个可以改变函数内的this 指向
+        // call 的主要作用可以实现继承
+        function Father(uname, age, sex) {
+            this.uname = uname;
+            this.age = age;
+            this.sex = sex;
+        }
+
+        function Son(uname, age, sex) {
+            Father.call(this, uname, age, sex);
+        }
+        var son = new Son('刘德华', 18, '男');
+        console.log(son);
+```
+2. apply()方法,  
+
+`apply()`与`call()`非常相似,不同之处在于提供参数的方式, apply()使用参数数组,而不是参数列表
+
+```javascript
+var Person = {
+    name: "zhangsan",
+    age: 19
+}
+
+function aa(x, y) {
+    console.log(x + "," + y);
+    console.log(this);
+    console.log(this.name);
+}
+
+aa.apply(Person, [4, 5]); //this指向Person--4,5  Person{}对象  zhangsan
+
+```
+
+3. bind()方法
+
+bind()创建的是一个新的函数(称为绑定函数),与被调用函数有相同的函数体, 当目标函数被调用时
+this的值绑定到bind()的第一个参数上
+
+```javascript
+var Person = {
+    name: "zhangsan",
+    age: 19
+}
+
+function aa(x, y) {
+    console.log(x + "," + y);
+    console.log(this);
+    console.log(this.name);
+}
+
+aa.bind(Person, 4, 5); //只是更改了this指向，没有输出
+aa.bind(Person, 4, 5)(); //this指向Person--4,5  Person{}对象  zhangsan
+
+```
+
+4. 另外我们可以存储this指向到变量中, 也可以改变this指向
+
+```javascript
+var oDiv1 = document.getElementById("div1");
+oDiv1.onclick = function () {
+    var _this = this; //将this储存在变量中，而且不改变定时器的指向
+    setTimeout(function () {
+        console.log(_this); //注意这里是_this，而不是this-- <div id="div1">点击</div>
+        console.log(this); //定时器的指向没有被改变--仍然是window
+    }, 1000)
+}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
