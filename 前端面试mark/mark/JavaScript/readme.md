@@ -361,7 +361,7 @@ const makeRequest = async () => {
 }
 ```
 
-### <h2 id="12">12. jd原型链</h2>
+### <h2 id="12">12. js原型链</h2>
 
 原型对象
 
@@ -1023,7 +1023,83 @@ URI(统一资源标识符)用于定义项目的标识,此处单词标识符标�
 
 URL指定要使用的协议类型,而URI不涉及协议规范
 
-### <h2 id=""></h2>
+### <h2 id="43">js的显示原型和隐式原型</h2>
 
+1. 什么是原型(what)
 
+> 每个构造函数(可以理解为类)都拥有一个属性(prototype), 该属性指向一个对象,
+> 用于存放公共的属性和构造函数的定义方式
 
+```js
+    var Fun=new Function()
+	Function Fun(){} 
+	//Fun就是创建出来的构造函数 
+```
+2. 为什么要用原型? 
+
+> 虽然说js中一切皆对象,但js本身不是一项面向对象编程的语言,
+> 没有类(class)的说法, 所以为了让构造函数(Function fun())构造出来的对象
+> 拥有公共的属性和方法, 故js使用原型(prototype)来存储这些公共的属性和方法,
+
+3. 如何使用原型?
+
+使用原型给对象添加方法和属性
+
+定义
+```js
+    Fun.prototype.num = 250; //添加公共属性
+    Fun.prototype.getPrice = function (){ // 添加公共方法
+        return `price:${this.num}` // 这里的this指向的调用的对象
+    }
+```
+使用
+```js
+var fun = new Fun()
+fun.num;
+fun.getPrice()
+```
+
+4. 显示原型和隐式原型的区别
+
+> 显示原型(prototype)是函数对象的一个属性,它指向函数的原型对象
+> 
+> 隐式原型(__proto__): 是示例对象的一个属性, 它指向创建该对象的构造函数的原型对象
+> 
+> 示例对象可以通过隐式原型对象访问构造函数和原型对象上的属性和方法,这就形成了原型链
+>
+
+```javascript
+
+//定义一个构造函数
+function Person(name, age) {
+  this.name = name;
+  this.age = age;
+}
+
+//给构造函数的原型对象添加一个方法
+Person.prototype.sayHello = function() {
+  console.log("Hello, I'm " + this.name);
+};
+
+//创建一个实例对象
+var p1 = new Person("Alice", 18);
+
+//访问实例对象的属性和方法
+console.log(p1.name); //Alice
+console.log(p1.age); //18
+p1.sayHello(); //Hello, I'm Alice
+
+//访问实例对象的显示原型和隐式原型
+console.log(p1.prototype); //undefined，因为实例对象没有prototype属性
+console.log(p1.__proto__); //Person { sayHello: [Function] }，因为实例对象有__proto__属性，指向构造函数的原型对象
+
+//访问构造函数的属性和方法
+console.log(Person.name); //Person，因为函数也是一种对象，有name属性
+console.log(Person.age); //undefined，因为构造函数没有age属性
+Person.sayHello(); //TypeError: Person.sayHello is not a function，因为构造函数没有sayHello方法
+
+//访问构造函数的显示原型和隐式原型
+console.log(Person.prototype); //Person { sayHello: [Function] }，因为构造函数有prototype属性，指向自己的原型对象
+console.log(Person.__proto__); //[Function]，因为构造函数也是一种特殊的对象，有__proto__属性，指向Function.prototype
+
+```

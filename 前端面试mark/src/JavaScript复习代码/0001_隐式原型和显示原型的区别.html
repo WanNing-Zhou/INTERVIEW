@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+  //定义一个构造函数
+  function Person(name, age) {
+    this.name = name;
+    this.age = age;
+  }
+
+  //给构造函数的原型对象添加一个方法
+  Person.prototype.sayHello = function() {
+    console.log("Hello, I'm " + this.name);
+  };
+
+  //创建一个实例对象
+  var p1 = new Person("Alice", 18);
+
+  //访问实例对象的属性和方法
+  console.log('p1.name',p1.name); //Alice
+  console.log('p1.age',p1.age); //18
+  p1.sayHello(); //Hello, I'm Alice
+
+  //访问实例对象的显示原型和隐式原型
+  console.log(p1.prototype); //undefined，因为实例对象没有prototype属性
+  console.log(p1.__proto__); //Person { sayHello: [Function] }，因为实例对象有__proto__属性，指向构造函数的原型对象
+
+  //访问构造函数的属性和方法
+  console.log(Person.name); //Person，因为函数也是一种对象，有name属性
+  console.log(Person.age); //undefined，因为构造函数没有age属性
+  Person.sayHello(); //TypeError: Person.sayHello is not a function，因为构造函数没有sayHello方法
+
+  //访问构造函数的显示原型和隐式原型
+  console.log(Person.prototype); //Person { sayHello: [Function] }，因为构造函数有prototype属性，指向自己的原型对象
+  console.log(Person.__proto__); //[Function]，因为构造函数也是一种特殊的对象，有__proto__属性，指向Function.prototype
+</script>
+
+</body>
+</html>
