@@ -481,13 +481,77 @@ button.addEventListener('click', () => {
 ```
 
 ### <h2 id="15">15. 防抖和节流</h2>
-- 什么是防抖: 防抖指的是触发事件之后n秒后才执行,如果在n秒内又触发了事件,则会重新计算函数执行时间
-- 什么是节流: 就是连续触发事件但在n秒钟只执行一次函数, 节流会稀释函数的执行频率
+- 什么是防抖(debounce): 防抖指的是在一定时间内多次触发一个函数,只执行最后一次   或者在开始时执行
+- 什么是节流(throttle): 是指在一定时间内多次触发同一个函数,只有第一次生效, 或者每隔一定时间才执行一次
+
+防抖和节流的目的是减少函数的执行频率,调高性能和用户体验
 
 ``` 
 当函数绑定一些持续触发的事件如：resize、scroll、mousemove ，键盘输入，多次快速click等等，
 
 如果每次触发都要执行一次函数，会带来性能下降，资源请求太频繁等问题
+```
+
+防抖的应用场景:用户输入搜索关键词时，可以使用防抖来避免频繁地向服务器发送请求。  
+节流的应用场景也比较广泛，例如在用户滚动页面时，可以使用节流来避免频繁地触发函数。  
+
+
+简单的防抖实现代码:
+```javascript
+/**
+ * 防抖函数
+ * @param {Function} fn - 需要执行的函数
+ * @param {Number} delay - 时间延迟参数
+ * @return {Function} 返回一个新的函数
+ */
+function debounce(fn, delay) {
+  // 定义一个变量来保存定时器的返回值
+  let timer = null;
+  // 返回一个新的函数
+  return function() {
+    // 保存函数执行时的参数
+    const args = arguments;
+    // 如果已经存在定时器，则清除之前的定时器
+    if (timer) clearTimeout(timer);
+    // 创建一个新的定时器
+    timer = setTimeout(() => {
+      // 在延迟结束后执行传入的函数，并传入之前保存的参数
+      fn.apply(this, args); //改变函数的this指向
+    }, delay);
+  }
+}
+
+```
+
+简单的节流代码:
+
+```javascript
+/**
+ * 节流函数
+ * @param {Function} fn - 需要执行的函数
+ * @param {Number} delay - 时间延迟参数
+ * @return {Function} 返回一个新的函数
+ */
+function throttle(fn, delay) {
+  // 定义一个变量来保存定时器的返回值
+  let timer = null;
+  // 返回一个新的函数
+  return function() {
+    // 保存函数执行时的参数
+    const args = arguments;
+    // 如果已经存在定时器，则直接返回
+    if (timer) return;
+    // 创建一个新的定时器
+    //fn.apply(this, args); //在延迟前执行传入的函数，并传入之前保存的参数
+    timer = setTimeout(() => {
+      // 在延迟结束后执行传入的函数，并传入之前保存的参数
+      fn.apply(this, args);
+      // 执行完毕后将定时器变量设置为 null，以便下一次调用函数
+      timer = null;
+    }, delay);
+  }
+}
+
 ```
 
 **防抖的操作:**  
@@ -524,13 +588,15 @@ button.addEventListener('click', () => {
 
 总之，依然是**密集的事件触发，但是这次密集事件触发的过程，不会等待最后一次才进行函数调用，而是会按照一定的频率进行调用**；
 
+具体参考:  
+[前端面试相关:性能优化之防抖与节流](https://juejin.cn/post/7206180323784294456)
 
 ### <h2 id="16">16. JS闭包</h2>
 
 闭包构成的条件: 函数 + 函数 能够访问的自由变量
 
 **闭包**是一个函数以及其捆绑的周边环境(词法环境)的引用的组合,换而言之,闭包让开发这可以从内部函数访问外部函数的作用域,
-在JavaScript钟,闭包会随着函数的创建而被同时创建
+在JavaScript中,闭包会随着函数的创建而被同时创建
 
 ```javascript
 var add = (function () {
@@ -546,7 +612,7 @@ add();
 
 /*
 * 实例解析
-* 变量 add 指定了函数自我调用的返回字值。
+* 变量 add 指定了函数自我调用的返回值。
 
 * 自我调用函数只执行一次。设置计数器为 0。并返回函数表达式。
 
@@ -564,7 +630,7 @@ add();
 
 #### <h3 id="16_1">对js闭包的理解以及常见应用场景(闭包的作用)</h3> 
 
-使用闭包住哟啊为了设计私有的方法和变量
+使用闭包主要是为了设计私有的方法和变量
 
 - 优点是可以避免环境变量的污染
 - 缺点是闭包会长驻内存,ui增大内存的使用量,使用不当很容易造成内容泄露
@@ -601,17 +667,18 @@ document.getElementsByClassName("a");
 
 h5新增方法
 
-document.querySelector和document.querySelectorAll
+`document.querySelector和document.querySelectorAll`
 
 添加: 
-1. 父节点.appendChild()
-2. 夫界定啊insertBefore(要插入的节点,参考节点)
+1. `父节点.appendChild()`
+2. `父节点.insertBefore(要插入的节点,参考节点)`: 其中参数 newchild 表示新插入的节点，
+   refchild 表示插入新节点的节点，用于指定插入节点的后面相邻位置。插入成功后，该方法将返回新插入的子节点。
 
 
 ### <h2 id="18">18. 线程与进程</h2>
 1. 线程是执行程序的最小单位, 而进程是操作系统分配资源的最小单位  
 
-2. 一个进程由由一个或多个线程组成, 线程是一个进程中代码的不同执行路线
+2. 一个进程由一个或多个线程组成, 线程是一个进程中代码的不同执行路线
 
 3. 进程之间互相独立,但同一个进程下的各个线程之间共享程序的内存控件(包括代码段,数据集,堆等)
    及一些进程的资源(如打开文件和信号等),某进程的线程在其他进程不可见
@@ -664,7 +731,7 @@ for(let index in arr) {
 
 ```
 
-### <h2 id="21">对深拷贝和浅拷贝有了解吗为什么会出现深拷贝和浅拷贝这两种概念</h2>
+### <h2 id="21">21.对深拷贝和浅拷贝有了解吗为什么会出现深拷贝和浅拷贝这两种概念</h2>
 
 首先深复制和浅复制只针对像 Object, Array 这样的复杂对象的。
 简单来说，浅复制只复制一层对象的属性，而深复制则递归复制了所有层级。
@@ -789,7 +856,7 @@ someone; //{name:'Amy', age:15}
 - 在函数中, this表示全局对象
 - 在函数中, 在严格模式下, this是未定义的(undefined)
 - 在事件中, this表示接收事件的元素
-- 类似call() 和 apply() 方法可以将this引用到任何对象
+- 类似call() 和 apply() , bind()方法可以将this引用到任何对象
 
 ### <h2 id="26">26. DOM事件流机制 / 事件捕获</h2>
 
@@ -800,7 +867,7 @@ someone; //{name:'Amy', age:15}
 一个事件在发生的时候会在子元素和父元素之间传播,这会分成三个阶段:  
 1. window 传到目标节点 ---- 捕获阶段(上层传到底层)
 2. 目标节点触发 ---- 目标阶段
-3. 目标节点传到window ---- 冒泡阶段(底层传到上层)
+3. 目标节点传到window ---- 冒泡阶段(底层传到上层) 
 
 ### <h2 id="27">27. 如何阻止冒泡?</h2>
 
@@ -942,9 +1009,10 @@ async/await实际上是promise+generator的语法糖，也就是promise，也就
 
 ### <h2 id="35">35. JS的垃圾回收机制</h2>
 答：**[垃圾回收](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Memory_Management#garbage_collection)** 是一个术语，
-在 [计算机编程 (en-US)](https://developer.mozilla.org/en-US/docs/Glossary/Computer_Programming)中用于描述查找和删除那些不再被其他[对象引用 (en-US)](https://developer.mozilla.org/en-US/docs/Glossary/Object_reference)的[对象](https://developer.mozilla.org/zh-CN/docs/Glossary/Object) 处理过程。
+在  [计算机编程 (en-US)](https://developer.mozilla.org/en-US/docs/Glossary/Computer_Programming) 中用于描述查找和删除那些不再被其他 [对象引用 (en-US)](https://developer.mozilla.org/en-US/docs/Glossary/Object_reference)
+的 [对象](https://developer.mozilla.org/zh-CN/docs/Glossary/Object) 处理过程。
 换句话说，垃圾回收是删除任何其他对象未使用的对象的过程。 
-垃圾收集通常缩写为 "GC"， 是[JavaScript](https://developer.mozilla.org/zh-CN/docs/Glossary/JavaScript)中使用的内存管理系统的基本组成部分。
+垃圾收集通常缩写为 "GC"， 是  [JavaScript](https://developer.mozilla.org/zh-CN/docs/Glossary/JavaScript) 中使用的内存管理系统的基本组成部分。
 
 为什么需要垃圾回收？
 遇到函数时会创建函数执行上下文放到栈顶，执行完毕后，从栈顶弹出，作用域随之销毁。
