@@ -1,5 +1,5 @@
 
-##  1. 前端面试计算机网络部分总结
+##  前端面试计算机网络部分总结
 _____
 
 本笔记由作者在复习八股文之计算机网络部分的相关的一些总结, 如果有什么错误的地方或者有什么相关的建议欢迎联系我
@@ -16,6 +16,10 @@ QQ昵称: 只为你乱了浮生
 ____
 
 <!--TOC-->
+- [前端面试计算机网络部分总结](#前端面试计算机网络部分总结)
+- [1. osi七层模型](#1-osi七层模型)
+- [2. HTTP协议是哪层通信协议](#2-http协议是哪层通信协议)
+- [3. HTTP标头(header)](#3-http标头header)
 
 <!--/TOC-->
 
@@ -55,10 +59,68 @@ ____
 
 ![img_1.png](img_1.png)
 
-  
+简单记一下他们的作用:  
 
-  
+|发送端| |接收端|
+|:---:|:---:|:---:|
+| 人做好信息往下发|**应用层**|看信息 | 
+|翻译一下|**表示层**| 翻译一下 |
+|打包|**会话层**| 看看包送全了没,没全就叫送缺的那个 |
+| 把包发给下层|**传输层**|把包发给下层|
+|给包贴IP地址的标签|**网络层**|报文--整理成包,看看送对了没|
+|帧：查表ip转mac，然后转成电信号|**数据链路层**|信号: 整理成帧,看看不全送上去|
+|定义好各种信号的意思，线路和插口的格式，发送吧|**物理层**|收到信号，送上去|
 
+## 2. HTTP协议是哪层通信协议
+
+HTTP协议处于TCP/IP协议体系的应用层, 它与FTP DNS等协议工作在同一层
+  ![img_2.png](img_2.png)
+
+应用层(Application Layer) 包含所有的高层协议,包括: 
+
+1. 虚拟终端协议（TELNET，TELecommunications NETwork）；
+2. 文件传输协议（FTP，File Transfer Protocol）；
+3. 电子邮件传输协议（SMTP，Simple Mail Transfer Protocol）；
+4. 域名服务（DNS，Domain Name Service）；
+5. 网上新闻传输协议（NNTP，Net News Transfer Protocol）；超文本5. 传送协议（HTTP，HyperText Transfer Protocol）。
+
+
+HTTP协议被用于WWW服务器传输超文本到本地浏览器的传输    
+它可以使浏览器更加高效,使网络传输减少;它不仅保证计算机正确快速地传输超文本文档,还确定传输文档中的哪一部分,以及哪部分内容首先显示等
+
+在TCP/IP协议的应用层中包含了大量人们普遍需要的协议  
+
+不同的我呢见系统又不同的文件命名原则;此外,应用层还有虚拟终端,电子邮件和新闻组等各种通用和专用的功能
+  
+## 3. HTTP标头(header)  
+
+**HTTP标头**(header)是HTTP请求和响应的核心,它承载了关于客户端浏览器,请求页面,服务器等相关的信息  
+
+当你在浏览器地址栏里键入一个URL,你的浏览器将会将类似如下的HTTP请求:
+```
+GET /tutorials/other/top-20-mysql-best-practices/ HTTP/1.1
+Host: net.tutsplus.comUser-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.5) Gecko/20091102 Firefox/3.5.5 (.NET CLR 3.5.30729)
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8Accept-Language: en-us,en;q=0.5
+Accept-Encoding: gzip,deflate
+Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
+Keep-Alive: 300
+Connection: keep-alive
+Cookie: PHPSESSID=r2t5uvjq435r4q7ib3vtdjq120Pragma: no-cacheCache-Control: no-cache
+```
+第一行被称为"Request Line"它描述的是这个请求的基本信息,剩下的就是HTTP headers了.
+
+请求完之后,你的浏览器可能会收到如下HTTP响应:
+```
+HTTP/1.x 200 OK
+Transfer-Encoding: chunkedDate: Sat, 28 Nov 2009 04:36:25 
+GMTServer: LiteSpeedConnection: closeX-Powered-By: W3 Total Cache/0.8Pragma: publicExpires: Sat, 28 Nov 2009 05:36:25 GMTEtag: "pub1259380237;gz"Cache-Control: max-age=3600, public
+Content-Type: text/html; charset=UTF-8
+Last-Modified: Sat, 28 Nov 2009 03:50:37
+ GMTX-Pingback: http://net.tutsplus.com/xmlrpc.php
+Content-Encoding: gzipVary:
+ Accept-Encoding, 
+ Cookie, User-Agent<!-- ... rest of the html ... 
+```
 
 
 
