@@ -20,6 +20,7 @@ ____
 - [1. osi七层模型](#1-osi七层模型)
 - [2. HTTP协议是哪层通信协议](#2-http协议是哪层通信协议)
 - [3. HTTP标头(header)](#3-http标头header)
+- [4.content-type的具体四种类型(POST提交数据方式)](#4content-type的具体四种类型post提交数据方式)
 
 <!--/TOC-->
 
@@ -182,6 +183,84 @@ multipart/form-data ： 需要在表单中进行文件上传时，就需要使�
 7. headers常见的安全攻击
 
 ![img_3.png](img_3.png)
+
+
+## 4.content-type的具体四种类型(POST提交数据方式)
+
+content-type是http的实体首部字段,用户说明请求或返回的消息主题是用何种方式编码,在request header 和response header里都存在
+
+**几个常用的类型:**  
+
+1. application/x-www-form-urlencoded  
+   1) 浏览器的原生form表单
+   2) 提交的数据按照`key1=val1&key2=val2`的方式进行编码,key和val都进行了URL转码
+2. multipart/form-data  
+   常见的PST数据提交的方式,我们使用表单上传文件时,必须让form的enctype等于这个值,
+
+```HTML
+<form action="/" method="post" enctype="multipart/form-data">
+  <input type="text" name="description" value="some text">
+  <input type="file" name="myFile">
+  <button type="submit">Submit</button>
+</form>
+```
+
+请求头看器来像这样
+
+```
+POST /foo HTTP/1.1
+Content-Length: 68137
+Content-Type: multipart/form-data; boundary=---------------------------974767299852498929531610575
+
+---------------------------974767299852498929531610575
+Content-Disposition: form-data; name="description"
+
+some text
+---------------------------974767299852498929531610575
+Content-Disposition: form-data; name="myFile"; filename="foo.txt"
+Content-Type: text/plain
+
+(content of the uploaded file foo.txt)
+---------------------------974767299852498929531610575--
+```
+对上面的格式进行一下分析: 
+
+> 首先生成了一个boundary用于分割不同的字段,为了避免于正文内容重复,
+>  boundary很长很复杂  
+> 然后Conent-Type里指明了数据是3以multipart/form-data来转码,本次
+>  请求的boundary是什么内容   
+> 消息主题里按照字段个数又分为多个结构类似的部分,每部分都是以
+> `--boundart`开始,紧接着是内容的描述信息,然后是回车,最后是字段具体
+> 内容(文本或二进制)  
+> 如果传输的是文件,还要包含文件名和文件类型信息,消息主题最后以
+> `--boundary--`标识结束.
+
+3. application/json  
+   消息主体是序列化后的JSON字符串,这个类型越来越被大家所使用
+
+```
+POST [http://www.example.com](http://www.example.com) HTTP/1.1 
+Content-Type: application/json;charset=utf-8 
+
+{"title":"test","sub":[1,2,3]}
+```
+  这种方案,可以方便的提交复杂的结构话数据,特别适合RESTful的几口,特别适合 RESTful 的接口。各大抓包工具如 Chrome 自带的开发者工具、Firebug、Fiddler，都会以树形结构展示 JSON 数据，非常友好。
+```
+
+4. text/xml  
+是一种使用HTTP作为传输协议,XML作为编码方式的远程调用规范
+```
+POST [http://www.example.com](http://www.example.com) HTTP/1.1 
+Content-Type: text/xml 
+<!--?xml version="1.0"?--> 
+<methodcall> 
+    <methodname>examples.getStateName</methodname> 
+    <params> 
+        <param> 
+            <value><i4>41</i4></value> 
+    </params> 
+</methodcall> 
+```
 
 
 
