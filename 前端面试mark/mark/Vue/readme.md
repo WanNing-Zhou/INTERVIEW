@@ -120,6 +120,14 @@ v-on事件；v-once: 只绑定一次。
 
 ## <h2 id="9">9. vue-loader是什么? 使用它的用途有哪些?</h2>
 
+vue-loader 是用于 webpack 的加载器，
+允许你用 Single-File Components 单文件组件的格式来写 Vue 组件。
+其作用就是提取 *.vue 文件中的template，script，style等，
+再通过 vue-template-compiler，style-loader 等插件，
+最终形成一个可以在浏览器中运行的 js 文件。
+
+
+
 答：vue文件的一个加载器，将template/js/style转换成js模块。  
 用途：js可以写es6、style样式可以scss或less、template可以加jade等  
 
@@ -138,7 +146,7 @@ js中使用import进来，然后.get或.post。返回在.then函数中如果成�
 答：
 v-model用于表单数据的双向绑定，其实它就是一个语法糖，这个背后就做了两个操作：
 v-bind绑定一个value属性；
-v-on指令给当前元素绑定input事件。
+v-on指令给当前元素绑定事件。
 
 ## <h2 id="13">13.请说出vue.cli项目中src目录每个文件夹和文件的用法？</h2>
 
@@ -168,6 +176,7 @@ watch:
 
 ## <h2 id="18">18.渐进式框架的理解</h2>
 答：主张最少；可以根据不同的需求选择不同的层级；
+
 ## <h2 id="19">19.Vue中双向数据绑定是如何实现的？</h2>
 
 答：vue 双向数据绑定是通过 数据劫持 结合 发布订阅模式的方式来实现的，   
@@ -874,9 +883,144 @@ export default {
 
 ```
 
-## <h2 id="39"></h2>
-## <h2 id="40"></h2>
-## <h2 id="40"></h2>
+## <h2 id="39">39.MVVM模型的理解?</h2>
+
+MVVM（Model-View-ViewModel）是对 MVC（Model-View-Control）和 MVP（Model-View-Presenter）的进一步改进。
+
+> View: 视图层(UI用户界面)
+> ViewModel: 业务逻辑层(一切 js 可视为业务逻辑,也就是前端的日常工作)
+> Model: 数据层(存储数据以及数据的处理如增删改查)
+
+- MVVM将数据双向绑定(data-binding)作为核心思想,View和Model之间没有联系,
+  他们通过ViewModel这个桥梁进行交互  
+  
+- Model和ViewModel之间的交互是双向的,因此View的拜年话回自动同步到Model,  
+  而model的变化也会立即反映到View上显示
+  
+- 当用户操作View, ViewModel感知到变化,然后通知Model发生相应的改变;  
+  反之当Model发生改变,ViewModel也能感知到变化,使View做出相应的更新  
+  
+![img_4.png](img_4.png)
+
+MVVM框架的核心就是双向绑定,器原理是同故宫数据劫持+发布订阅模式结合的方式实现的,
+简单来说就是数据层发生变化的时候,可同步更新视图层,当视图层发生变化的时候,
+同步更新到数据层  
+
+## <h2 id="40">40. 双向绑定的核心: Object.defineProperty()</h2>
+
+Object.defineProperty(obj,prop,descriptor)方法回直接在一个对象上定义一个新属性,
+或者修改一个对象的现有属性,并返回此对象  
+
+> - obj: 要定义属性的对象
+> - prop: 要定义或修改的属性的名称或Symbol
+> - descriptor: 要定义或修改的属性描述符  
+> - 返回值: 被传递给函数的对象
+
+我们通过Object.defineProperty的get方法用来获取set方法用来拦截设置值  
+
+```javascript
+var obj = {} //定义一个空对象
+Object.defineProperty(obj,'val',{ //定义要修改对象的属性
+    get:function(){
+      console.log('获取对象的值')
+    },
+    set:function (newVal) {
+      console.log('设置对象的值,最新的值是'+newVal);
+    }
+})
+
+obj.hello = 'hello world'
+
+```
+
+js通过Object.defineProperty方法简单的实现双向绑定  
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" id="app">
+    <span id="childSpan"></span>
+</body>
+<script>
+    var obj = {}
+    var initValue='初始值'
+    Object.defineProperty(obj,'initValue',{
+        get(){
+            console.log('获取obj最新的值');
+            return initValue
+        },
+        set(newVal){
+            initValue = newVal
+            console.log('设置最新的值');
+            // 获取到最新的值  然后将最新的值赋值给我们的span
+            document.getElementById('childSpan').innerHTML = initValue
+            console.log(obj.initValue);
+        }
+    })
+    document.addEventListener('keyup', function (e) {
+        obj.initValue = e.target.value; //监听文本框里面的值 获取最新的值 然后赋值给obj 
+    })
+    
+</script>
+</html>
+```
+
+## <h2 id="41">41. 实现双向数据绑定的过程</h2>
+
+![img_5.png](img_5.png)
+
+任务拆分:
+  1. 将vue实例中的数据渲染到页面上  
+  2. 将页面上的数据变更同步到vue实例中
+  3. vue实例中data数据变更,页面上数据同步变更
+
+传统的JS来操作dom是非常繁琐的,性能极低,比如我们要错做dom 10次,操作第一次的时候,
+浏览器还不知道后面还有9次操作,所以浏览器回进行10次的重绘重排 ,
+但有的时候,我们进行下一次操作的时候,前一次的操作结果已经不准确了,
+那前一次的操作结果就是无用功了,白白浪费了性能;  
+
+DocumentFragment(碎片化文档)可以把其看成一个容器,
+把浏览器10次操作都扔到这个容器里,最终把最后一次的结果输出到浏览器上,
+真央我们只渲染了一次,并且DocumentFragment是在内存中执行的效率非常高  
+
+DocumentFragment拦截数据:  
+```javascript
+function nodeToFragment(node){ //这里的node是一个链表的头部
+    var fragment = docuemnt.createDocumentFragment();
+    var child = null;
+    while(child = node.firstChild){
+        fragment.appendChild(child)
+    }
+    return fragment
+}
+```
+实现思路:  
+  1. 如何将vue data中的数据对应绑定到文本上  
+  2. 如果将input中的数据更新到vue实例的data中  
+
+nodeToFragment方法中,我们会拦截到所有的dom然后对dom节点的属性进行分析,
+比如找到v-model中的对应的变量跟vue data中的变量进行匹配,匹配到对应项
+然后更新数据  
+
+vue构造函数  
+```javascript
+//构造函数 
+function Vue(options){
+    this.data = options.data
+    var id = options.el 
+        
+  
+}
+```
+
+
 ## <h2 id="40"></h2>
 ## <h2 id="40"></h2>
 ## <h2 id="40"></h2>
