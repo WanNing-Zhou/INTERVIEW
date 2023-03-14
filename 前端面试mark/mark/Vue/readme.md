@@ -657,7 +657,7 @@ Vue-Router 官网里如此描述：“不过这种模式要玩好，还需要后
 答:  
 三种方式  
 
-第一种：vue异步组件技术 ==== 异步加载，v
+第一种：vue异步组件技术 ==== 异步加载，
 ue-router配置路由 , 使用vue的异步组件技术 , 可以实现按需加载 .
 但是,这种情况下一个组件生成一个js文件。  
 ```javascript
@@ -752,7 +752,22 @@ modules => 模块化Vuex
 
 ## <h2 id="38">1. Vue组件间通信方式总结</h2>
 
+答: 
+
 Vue组件间通信方式: props、$emit/$on、vuex、$parent / $children、$attrs/$listeners和provide/inject
+
+常见的场景可以分为三类:
+- 父子通信: 父向子传递数据是通过,props, 子向父是通过events($emit);  
+  通过父父链/子链也可以通信($parent/$children);  
+  ref也可以访问组件实例  
+  provi/inject API;
+  $attrs/$listeners;
+
+- 兄弟通信: Bus(全局事件总线;VueX)
+- 跨级通信: Bus,Vuex;provid/injectAPI, %attrs/$listeners
+
+
+以下为学习内容: 
 
 ![img.png](img.png)
 
@@ -1281,9 +1296,45 @@ export default {
 
 #### 方法六、$parent / $children与 ref
 
-```javascript
+- ref: 如果在普通的DOM元素上使用,引用指向的就是DOM元素;如果在子组件上,引用就指向组件实例
+- $parent/$children: 访问父/子实例
 
+组要注意的是:这两种都是直接得到组件实例,使用后可以直接调用组件的方法和访问数据,
+来看一下`ref`来访问组件的例子
+
+```javascript
+// component-a 子组件
+export default {
+  data () {
+    return {
+      title: 'Vue.js'
+    }
+  },
+  methods: {
+    sayHello () {
+      window.alert('Hello');
+    }
+  }
+}
 ```
+```html
+// 父组件
+<template>
+  <component-a ref="comA"></component-a>
+</template>
+<script>
+  export default {
+    mounted () {
+      const comA = this.$refs.comA;
+      console.log(comA.title);  // Vue.js
+      comA.sayHello();  // 弹窗
+    }
+  }
+</script>
+```
+
+不过**这两种方法的弊端是,无法在跨级,或兄弟间通信**
+我们想在 component-a 中，访问到引用它的页面中（这里就是 parent.vue）的两个 component-b 组件，那这种情况下，就得配置额外的插件或工具了，比如 Vuex 和 Bus 的解决方案。
 
 ## <h2 id="39">39.MVVM模型的理解?</h2>
 
