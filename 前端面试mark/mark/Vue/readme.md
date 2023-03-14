@@ -47,7 +47,7 @@ ____
   
 - [三、vue路由面试题 ](#three)
     - [1.mvvm 框架是什么？](#26)
-    - [2.vue-router 是什么?它有哪些组件<](#27)
+    - [2.vue-router 是什么?它有哪些组件](#27)
     - [3.active-class 是哪个组件的属性？](#28)
     - [4.怎么定义 vue-router 的动态路由? 怎么获取传过来的值？](#29)
     - [5.vue-router 有哪几种导航钩子?](#31)
@@ -272,24 +272,334 @@ vue是实现了双向数据绑定的mvvm框架，当视图改变更新模型层�
 
 答：vue用来写路由一个插件。<font color="red">router-link、router-view</font> 
 
+vue-router是Vue.js官方的路由管理器,它和Vue.js的核心深度集成,让构建单页面应用变得更加简单  
+
+**vue-router组件:**  
+  - <router-link to=""> 路由的路径
+  - <router-link :to="{name:' '|路由名}" 命名路由
+  - <router-view> 路由的显示
+
+
+
 ## <h2 id="28">3.active-class 是哪个组件的属性？</h2>
 
-答：vue-router模块的router-link组件。children数组来定义子路由
+active-class属于vue-router的样式方法,当`routerlink`标签被点击是,将会应用这个样式  
+
+使用方法一: touterLink标签内使用  
+
+```html
+<router-link to="/" active-class="active">首页</router-link> 
+```
+
+使用方法二:在路由js文件,配hi在active-vlass
+```html
+<script>
+    const router = new VueRouter({
+        routes,
+        linkActiveClass: 'active'
+    });
+</script>
+```
+在使用时会有一个小bug: 首页的active会一直被应用  
+为了解决这个问题,还需要加入一个属性`exact`(表示路由的严格匹配),也有两种方法  
+
+
+方式一:在router-link中写入exact  
+```html
+<router-link to="/" active="active" exact>首页</router-link>
+```
+
+方式二: 在路由js文件配置active-class  
+```html
+<script>
+    const router = new VueRouter({
+        routes,
+        linkExactActiveClass: 'active'
+    });
+</script>
+
+```
 
 ## <h2 id="29">4.怎么定义 vue-router 的动态路由? 怎么获取传过来的值？</h2>
 
 答：在router目录下的index.js文件中，对path属性加上/:id。 使用router对象的params.id。
 
+
+可以通过query,param两种方式, 区别: query通过url传参, 刷新 页面参数还在, params刷新页面参数不在  
+
+param的类型: 
+- 配置路由格式: /router/:id  
+- 传递的方式: 在path后面跟上对应的值
+- 传递后的合成路径:/router/123
+```
+<!-- 动态路由-params -->
+ 
+//在APP.vue中
+    <router-link :to="'/user/'+userId" replace>用户</router-link>    
+ 
+//在index.js
+     {
+    path: '/user/:userid',
+    component: User,
+    },
+```
+跳转方法:  
+``` 
+// 方法1：
+<router-link :to="{ name: 'users', params: { uname: wade }}">按钮</router-link>
+// 方法2：
+this.$router.push({name:'users',params:{uname:wade}})
+// 方法3：
+this.$router.push('/user/' + wade)
+```
+通过$route.params.参数名 获取你所传递的值
+
+query的类型:
+
+- 配置路由格式:/router,也就是普通配置
+- 传递的方式,对象中使用query的key作为传递方式
+-传递后形成的路径:/route?id=123
+  
+```html
+  <!-- 动态路由-params -->
+
+//在APP.vue中
+<router-link :to="'/user/'+userId" replace>用户</router-link>
+
+//在index.js
+{
+path: '/user/:userid',
+component: User,
+},
+```
+**跳转方法：**
+
+```html
+//方法1 
+<touter-link :to="{name='users',params:{uname:wade}">按钮</touter-link>
+//方法2
+this.$router.push({name:'users',params:{uname:wade}})
+//方法2
+this.$router.push('/user/'+wade)
+```
+通过$route.params.参数名 获取你所传递的值
+
+query的类型: 
+- 配置路由格式:/router,也就是普通配置
+- 传递的方式: 对象中使用query的key作为传递方式
+- 传递后性成分的路径: `/route?id=123`
+
+```html
+<!--动态路由-query -->
+//01-直接在router-link 标签上以对象的形式
+<router-link :to="{path:'/profile',query:{name:'why',age:28,height:188}}">档案</router-link>
+/*
+    02-或者写成按钮以点击事件形式
+    <button @click='profileClick'>我的</button>    
+*/
+ 
+ //点击事件
+ profileClick(){
+   this.$router.push({
+        path: "/profile",
+        query: {
+          name: "kobi",
+          age: "28",
+          height: 198
+        }
+      });
+ }
+```
+跳转方法: 
+
+```html
+// 方法1：
+<router-link :to="{ name: 'users', query: { uname: james }}">按钮</router-link>
+// 方法2：
+this.$router.push({ name: 'users', query:{ uname:james }})
+// 方法3：
+<router-link :to="{ path: '/user', query: { uname:james }}">按钮</router-link>
+// 方法4：
+this.$router.push({ path: '/user', query:{ uname:james }})
+// 方法5：
+this.$router.push('/user?uname=' + jsmes)
+```
+
+通过$route.query获取你所传递的值
+
 ## <h2 id="31">5.vue-router 有哪几种导航钩子?</h2>
 
 答：三种，
 第一种：是全局导航钩子：router.beforeEach(to,from,next)，作用：跳转前进行判断拦截。
+  - 前置钩子 router.beforeEach,初始化的时候被调用,每次路由切换之前被调用   
+    一般用来做一些进入页面的限制, 比如没有登录,就不能进入某些也页面  
+```javascript
+meta: { may: true }
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(item => item.meta.may)) {
+        let id = window.localStorage.getItem("id")
+        if (id) {
+            next()
+        } else {
+            next({ name: "login" })
+        }
+    } else {
+        next()
+    }
+})
+//注意：next 方法必须要调用，否则钩子函数无法 resolved 
+```
+  - 后置钩子 router.afterEach 初始化的时候被调用,每次路由切换之后被调用 在动态更改系统顶部的标题的时候，
+    就需要使用这个全局后置路由守卫
+```javascript
+// 全局后置路由守卫，它只有两个参数
+// to==>到哪一个路由，
+// form ==> 来源哪一个路由，
+router.afterEach((to,form) => {
+    console.log('to', to, form);
+    console.log('form',to,form);
+})
+
+router.afterEach((to,form) => {
+    console.log('to', to);
+    console.log('form', form);
+    document.title=to.mata.title
+})
+
+/**
+ * 元路由meta
+ * 很多时候路,我们需要将一个路由上放置一个信息  
+ * 我们可以放在meta上
+ * 简单配置如下
+ * {
+    path: "/zujian",
+    name: "zujian",
+    meta: {
+        user: admin,
+        info:'我是admin',
+        key:'key-value的形式'
+    },
+    component: () => import("../views/zujian.vue"),
+},
+ */
+```
+  
 第二种：组件内的钩子
-第三种：单独路由独享组件
+```javascript
+beforeRouteEnter(to, from, next) {
+    // do someting
+    // 在渲染该组件的对应路由被 confirm 前调用
+},
+beforeRouteUpdate(to, from, next) {
+    // do someting
+    // 在当前路由改变，但是依然渲染该组件是调用
+},
+beforeRouteLeave(to, from ,next) {
+    // do someting
+    // 导航离开该组件的对应路由时被调用
+}
+```
+第三种：单独路由独享钩子
+```javascript
+{
+    path: '/home',
+    name: 'home',
+    component: Home,
+    beforeEnter(to, from, next) {
+        if (window.localStorage.getItem("id")) {
+            next()
+        } else {
+            next({ name: "login" })
+        }
+    }
+}
+```
+
+全局解析守卫  
+router.beforeResolve 注册一个全局守卫, 和 router.beforeEach类似
+可以在src目录下创建一个permission.js文件
+
+```javascript
+router.afterEach((to,from) => {
+	if(to.meta && to.meta.title){
+		document.title = to.meta.title
+	}else{
+		document.title = "666"
+	}
+})
+第二种：单独路由独享钩子
+
+{
+    path: '/home',
+    name: 'home',
+    component: Home,
+    beforeEnter(to, from, next) {
+        if (window.localStorage.getItem("id")) {
+            next()
+        } else {
+            next({ name: "login" })
+        }
+    }
+}
+第三种：组件内的钩子
+
+beforeRouteEnter(to, from, next) {
+    // do someting
+    // 在渲染该组件的对应路由被 confirm 前调用
+},
+beforeRouteUpdate(to, from, next) {
+    // do someting
+    // 在当前路由改变，但是依然渲染该组件是调用
+},
+beforeRouteLeave(to, from ,next) {
+    // do someting
+    // 导航离开该组件的对应路由时被调用
+}
+```
+
+
+
+
 
 ## <h2 id="32">6.$route 和 $router 的区别</h2>
 
-答：   
+答：  
+$route对象: $route对象表示当前的的路由信息,包含当前URL解析得到的信息,包含当前的路径,参数,query对象等
+
+```
+1.$route.path 字符串,对应当前路由的路径,总是解析为绝对路径 如:"/foo/bar"
+2. $route.params 一个key/value对象,包含了 动态片段和 全匹配片段,如果没有路由参数就是一个空对象
+3. $route.params 一个key/value对象,白哦是URL查询参数.例如,对于路径/foo?uer=1,
+  有$route.query.user == 1， 如果没有查询参数，则是个空对象。
+4. $route.hash当前路由的hash值(不带#),如果没有hash值,则为空字符串 锚点*
+5. $route.fullPath完成解析后的URL,包含查询参数和hash的完整路径
+6. $route.matched数组,包含当前匹配的路径中所包含的所有片段所对应的配置参数对象
+7. $toute.name 当前路径名字
+8. $route.meta路由元信息
+```
+
+$route对象: $router对象时全局路由的实例,时router构造方法的实例
+
+实例方法:
+```java
+1. push
+  1. 字符串this.$router.push('home')
+  2. 命名的路由this.$router.push({name:'user',params:{userId:123}})
+  3. 带查询参数 变成 /register?plan=123 this.$router.push({path:'register',query:{plan:'123'}})
+    push方法其实和<router-link :to="...">是等同的。
+  4.对象 this.$router.push({path:'home'})
+  注意: push方法的会跳转向history栈添加一个新的记录,当我们点击浏览器的返回按钮时可以看到之前的页面
+
+2. go
+  页面路由跳转
+  签进或者后退this.$router,go(-1)//后退
+
+3. replace
+  push方法会向history栈添加一个新的记录,而replace方法时替换当前的页面  
+  不会像history栈添加一个新的记录
+```
+
+
 router是VueRouter的实例，在script标签中想要导航到不同的URL,
 使用router.push方法。返回上一个历史history用$router.to(-1)
 
@@ -301,8 +611,45 @@ $route为当前router跳转对象。里面可以获取当前路由的name,path,q
 
 hash模式：即地址栏 URL 中的 # 符号；
 
-history模式：window.history对象打印出来可以看到里边提供的方法和记录长度。 
+history模式：window.history对象打印出来可以看到里边提供的方法和记录长度。
 利用了 HTML5 History Interface 中新增的 pushState() 和 replaceState() 方法。（需要特定浏览器支持）。
+
+因此可以说，hash 模式和 history 模式都属于浏览器自身的特性，Vue-Router 只是利用了这两个特性（通过调用浏览器提供的接口）来实现前端路由。
+
+
+
+一般情景下, hahs和history都可以,除非你更在意颜值,`#`符号夹杂在URL来确实有些不太美丽
+
+另外，根据 Mozilla Develop Network 的介绍，
+调用 history.pushState() 相比于直接修改 hash，存在以下优势：
+```text
+pushState() 设置的新 URL 可以是与当前 URL 同源的任意 URL；
+而 hash 只可修改 # 后面的部分，因此只能设置与当前 URL 同文档的 URL；
+
+pushState() 设置的新 URL 可以与当前 URL 一模一样，这样也会把记录添加到栈中；
+而 hash 设置的新值必须与原来不一样才会触发动作将记录添加到栈中；
+
+ushState() 通过 stateObject 参数可以添加任意类型的数据到记录中
+；而 hash 只可添加短字符串；
+
+pushState() 可额外设置 title 属性供后续使用。
+```
+
+比较:
+1. `hash`模式下,仅`hash`符号之前的内容会被包含在前求中,
+   如 `http://www.abc.com`，因此对于后端来说，
+   即使没有做到对路由的全覆盖，也不会返回 404 错误。
+   
+2.`history`模式下,前端的URL必须和实际像后端发起的URL一致,
+  如 `http://www.abc.com/book/id `。
+  如果后端缺少对 /book/id 的路由处理，将返回 404 错误。
+
+```text
+Vue-Router 官网里如此描述：“不过这种模式要玩好，还需要后台配置支持……所以呢
+，你要在服务端增加一个覆盖所有情况的候选资源：
+如果 URL 匹配不到任何静态资源，则应该返回同一个 index.html 页面，
+这个页面就是你 app 依赖的页面。”
+```
 
 
 ## <h2 id="34">8.vue-router实现路由懒加载（ 动态加载路由 ）</h2>
@@ -310,14 +657,69 @@ history模式：window.history对象打印出来可以看到里边提供的方�
 答:  
 三种方式  
 
-第一种：vue异步组件技术 ==== 异步加载，vue-router配置路由 , 使用vue的异步组件技术 ,
-可以实现按需加载 .但是,这种情况下一个组件生成一个js文件。  
-
+第一种：vue异步组件技术 ==== 异步加载，v
+ue-router配置路由 , 使用vue的异步组件技术 , 可以实现按需加载 .
+但是,这种情况下一个组件生成一个js文件。  
+```javascript
+/* vue异步组件技术 */
+{
+  path: '/home',
+  name: 'home',
+  component: resolve => require(['@/components/home'],resolve)
+},{
+  path: '/index',
+  name: 'Index',
+  component: resolve => require(['@/components/index'],resolve)
+},{
+  path: '/about',
+  name: 'about',
+  component: resolve => require(['@/components/about'],resolve)
+} 
+```
 第二种：路由懒加载(使用import)。    
+```javascript
+// 下面2行代码，没有指定webpackChunkName，每个组件打包成一个js文件。
+/* const Home = () => import('@/components/home')
+const Index = () => import('@/components/index')
+const About = () => import('@/components/about') */
+// 下面2行代码，指定了相同的webpackChunkName，会合并打包成一个js文件。 把组件按组分块
+const Home =  () => import(/* webpackChunkName: 'ImportFuncDemo' */ '@/components/home')
+const Index = () => import(/* webpackChunkName: 'ImportFuncDemo' */ '@/components/index')
+const About = () => import(/* webpackChunkName: 'ImportFuncDemo' */ '@/components/about')
 
-第三种：webpack提供的require.ensure()，vue-router配置路由，使用webpack的require.ensure技术，也可以实现按需加载。
+//再路由文件下进行配置
+
+{
+  path: '/about',
+          component: About
+}, {
+  path: '/index',
+          component: Index
+}, {
+  path: '/home',
+          component: Home
+}
+
+```
+第三种：webpack提供的require.ensure()，  
+vue-router配置路由，使用webpack的require.ensure技术，也可以实现按需加载。   
 这种情况下，多个路由指定相同的chunkName，会合并打包成一个js文件。  
-
+```javascript
+/* 组件懒加载方案三: webpack提供的require.ensure() */
+{
+  path: '/home',
+  name: 'home',
+  component: r => require.ensure([], () => r(require('@/components/home')), 'demo')
+}, {
+  path: '/index',
+  name: 'Index',
+  component: r => require.ensure([], () => r(require('@/components/index')), 'demo')
+}, {
+  path: '/about',
+  name: 'about',
+  component: r => require.ensure([], () => r(require('@/components/about')), 'demo-01')
+}
+```
 # <h1 id="four">四, vuex常见面试题</h1>
 
 ## <h2 id="35">1.vuex是什么？怎么使用？哪种功能场景使用它？</h2>
@@ -1012,18 +1414,290 @@ nodeToFragment方法中,我们会拦截到所有的dom然后对dom节点的属�
 vue构造函数  
 ```javascript
 //构造函数 
-function Vue(options){
-    this.data = options.data
-    var id = options.el 
-        
+function Vue(options) {
+  this.data = options.data
+  var id = options.el
+}
+
+// 实例
+var vm = new Vue({
+  el: 'app',
+  data: {
+    text: '赵刚',
+    test: '测试',
+    name: 'hbb'
+  }
+})
+        // dom结构
+<div id="app"> 
+        测试双向绑定demo 
+        <input type="text" v-model="text" /> {{text}}
+</div>
+
+
+```
+
+拦截dom并找到vue实例中data对应的数据,然后渲染到页面上
+
+```javascript
+// 编译函数
+function compile(name,vm){
+  var reg = /\{\{(.*)\}\}/; // 来匹配{{xxx}}中的xxx
+  //如果元素节点
+  if(node.nodeType === 1){
+      var attr = node.attributes;
+      //解析元素所有属性
+        for(let i = 0; i <attr.length;i++){
+            if (attr[i].nodeName === 'v-model'){
+                var name = attr[i].nodeValue //看看是与哪一个数据相关
+                //元素监听输入事件,来实时更新data中的值
+                node.addEventListener('input',function (e){ 
+                  //将与其相关的数据改为最新值
+                  vm[name] = e.target.value
+                })
+              node.value = vm.data[name];
+            }
+        }
+  }
   
+  //如果是文本节点
+  if(node.nodeType === 3){
+      if (reg.test(node.nodeValue)){
+          var name = RegExp.$1; //获取到匹配的字符串
+            name = name.trim();
+            node.nodeValue = vm[name] //将data中的值赋予给该node
+      }
+  }
+}
+
+```
+将获取到的data中的数据更新到文档碎片中
+```javascript
+function nodeToFrament(node,vm){
+    var fragment = document.createDocumentFragment();
+    var child;
+    while (child = node.firstChild){
+        compile(child,vm) //将从dta中获取到的数据的dom更新到文档碎片中
+        fragment.appendChild(child)
+    }
+    return fragment
 }
 ```
 
+如果我们完成了第一步,将最新的数据更新到data中  
+首先我们需要拦截data对象中的所有属性,这样当页面数发生改变,我们会在setter函数中监听到数据变化并拿到最新的数据
+```javascript
+function Vue(options){
+    this.data = options.data;
+    observe(this.data,this) //观察整个data对象
+    var id = options.el 
+    var dom = nodeToFragment(document.getElementById(id),this)
+    //处理完所有节点后,重新把内容添加回去  
+    document.getElementById(id).appendChild(dom)
+}
+//拦截data中所有数据
+function observe(obj,vm){
+    for (let key of Object.keys(obj)){
+        defineReactive(vm,key,obj[key]);
+    }
+} 
 
-## <h2 id="40"></h2>
-## <h2 id="40"></h2>
-## <h2 id="40"></h2>
+function defineReactive(obj,key,val){
+    Object.defineProperties(obj,key,{
+        get:function (){
+            // 获取对象的值
+            return val
+        },
+        set: function (newVal){
+            val = newVal;
+            //当对象属性变更, 拦截数据
+          console.log('新值'+val)
+        }
+    })
+}
+
+```
+第三步 就是当我们已经拿到最新的变更后的数据了 那么怎么通知dom 让其对应的更新成最新的数据呢 我们都知道一个页面就是一个组件 一个vue实例对象 
+那么我们就需要一个中间桥梁 当数据发生变化 这个中间桥梁拿到最新数据 然后告诉页面 数据更新了 你需要重新渲染了
+
+发布订阅模式:  
+发布订阅者模式就是一种 一对多 的依赖关系。多个订阅者（一般是注册的函数）同时监听同一个数据对象，
+当这个数据对象发生变化的时候会执行一个发布事件，通过这个发布事件会通知到所有的订阅者，使它们能够自己改变对数据对象依赖的部分状态。  
+一个完整的订阅发布模式，由发布者、订阅者、消息管理器三部分组成  
+![img_6.png](img_6.png)  
+
+在双向数据绑定中,每当又数据发生变化就要发布一个通知,让驶入更新,那么在set函数汇总就要发布订阅函数, 而每一个对象属性都是订阅者
+
+```javascript
+
+  //dep构造函数
+  function Dep(){
+    this.subs = [] //观察主体添加订阅者
+  }
+  Dep.prototype = {
+    // 添加订阅者
+    addSub(sub){
+        this.subs.push(sub)
+    },
+    //发布通知
+    notify(){
+        this.subs.forEach(function (sub){
+            sub.update()
+        })
+    }
+  }
+  
+  function  defineReactive(obj,key,val){
+    var def = new Dep(); //观察者实例
+    Object.defineProperties(obj,key,{
+        get:function (){
+            if(Dep.target){//每一个观察者都是唯一的
+                dep.addSub(Dep.target)
+            }
+            return val
+        },
+        set: function (newVal){
+            if (newVal === value){
+                return
+            }
+            val = newVal;
+          console.log('新值'+val)
+          //一旦更新立马通知
+          dep.notify()
+        }
+    })
+  }
+
+```
+以上我们已经完成了当数据发生变化的时候,通知多有的订阅者数据更新了,快更新DOM吧, 如何将发布者和订阅者关联起来?
+通过将每一个watch实例赋值给Dep.target的全局变量,这样Watcher和Dep就有关系了,当操作完成了就需要将Dep.target置为空,
+
+
+```javascript
+function Watch(vm,node,name){
+    Dep.target = this;
+    this.vm = vm;
+    this.node = node;
+    this.name = name;
+    this.update();
+    Dep.target = null;
+}
+
+Watcher.prototype = {
+  update() {
+    this.get();
+    this.node.nodeValue = this.value //更改节点内容的关键
+  },
+  get() {
+    this.value = this.vm[this.name] //触发相应的get
+  }
+}
+```
+
+## <h2 id="42">42. vue的v-on指令的使用</h2>
+
+**v-on**   
+  1. 为元素绑定监听事件  
+  2. `v-on:事件名="函数名"`,简写`@事件名='函数名'`
+  3. `v-on`绑定的事件触发后,vue会去实例对象的`methods`中找对应的回调函数  
+  4. 使用修饰符,如`v-on:事件名.once="函数名"`
+  5. 使用`@事件名='函数名($event)'来获取事件对象`
+
+**常用修饰符**  
+**.once**  
+默认只要事件触发,回调函数会反复执行,只想让它执行一次,可以使用once修时符  
+
+**.prevent**  
+阻止舰艇和的元素本身的默认行为(而非监听事件的)  
+
+**.stop**  
+嵌套的元素中,多个元素监听到发生同一事件时,会发生事件冒泡,可用stop修饰符阻止  
+
+**.self**  
+让回调函数只有当前元素触发事件时才执行(即避免**被其他元素**冒泡影响,但该元素触发监听事件,可影响其他元素)
+
+**.capture**  
+添加事件侦听器时使用capture模式,将事件冒泡变成事件捕获  
+
+**v-on按键修饰符**  
+用来监听按键  
+1. 文中建议使用内置的按键别名,当不满足需求的情况下,可以通过keycode自定义按键名  
+2. Keycode: 键盘上每个键对应一个数字,整个数字就是键的Keycode  
+3. 知道了键的Keycode就可以在js代码位置根据keycode自定义键的别名:  
+`Vue.config.keyCodes.f2=113`  
+
+   
+
+## <h2 id="43">43. $route和$router的区别 </h2>
+
+1. $router是VueRouter的一个对象,通过Vue.use(VueRouter)和Vue构造函数得到
+一个router的实例对象,整个对象中是一个全局对象,他包含了所有的路由, 
+   包含了许多关键的对象和属性  
+   
+![img_7.png](img_7.png)
+
+
+> 以history对象举例:  
+> $router.push({path:'home'}),本质是history栈中添加一个路由,
+> 在我们看来是切换路由,单本质是添加一个history记录  
+> 
+> $router.replace({path:'home'}) //替换路由,没有历史记录  
+> $router.push('/login') ,跳转到指定的路由
+
+2. $route 是一个跳转对象,每一个路由都会有一个$route对象,是一个局部的对象,可以获取对应的
+name,path,params,query等
+   ![img_8.png](img_8.png)
+
+> 这两者不同的结构可以看出两者的区别,他们的一些属性是不同的  
+> $route.path字符串,等于当前路由对象的路径,会被解析为绝对路路径,如/home/ews    
+> $route.params对象,含路由中的动态片段和全匹配片段的键值对,不会拼接到路由的url后面  
+> $route.query对象,包含路由中查询参数的键值对,会拼接到url后面  
+> $route.router 路由规则所属的路由器  
+> $route.name 当前路由的名字,如果没有使用具体路径,则名字为空
+
+
+## <h2 id="44">vue-router 如何知道相应路由参数的变化?</h2>
+答: 但是用路由参数时,例如从`/user/aside`导航到`/user/foo`,原来的组件实例会被复用,因为两个路由都渲染同个组件
+比销毁再创建,复用则更加高效,不过,这也意味着组件的生命周期钩子不会再被调用
+
+注意: 
+1) 从同一个组件跳转到同一个组件
+2) 生命周期钩子created和mounted都不会调用
+
+```javascript
+beforeRouteUpdate(to,from,next){
+//在这个钩子函数中：to表示将要跳转的路由对象，from表示从哪个路由跳转过来，next多数就是需要调用
+//created和mounted不调用，无法拿到需要的动态值，就通过to.path,to.params等
+//可以在这个函数中打印to，具体看to对象有什么可以使用的属性
+}
+```
+
+添加watch监听
+```javascript
+watch: {
+  // 方法1 //监听路由是否变化
+  '$route' (to, from) {
+    if(to.query.id !== from.query.id){
+      this.id = to.query.id;
+      this.init();//重新加载数据
+    }
+  }
+}
+//方法 2  设置路径变化时的处理函数
+watch: {
+  '$route': {
+    handler: 'init',
+            immediate: true
+  }
+}
+```
+
+为了实现这样的效果可以给`router-view`添加一个不同的`key`,这样即使是公用组件,
+只要url改变,就一定会重新创建这个组件
+```html
+<router-view :key="$route.fullpath"></router-view>
+```
+
 ## <h2 id="40"></h2>
 ## <h2 id="40"></h2>
 
