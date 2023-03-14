@@ -1304,8 +1304,242 @@ oDiv1.onclick = function () {
 
 ```
 
+## <h2 id="42">42. js中数组常用的方法有哪些</h2>
+
+1. push(元素1,元素2,...元素n)
+
+push()方法可以把参数指定的元素一次添加到数组的末尾,并返回添加元素后数组的长度(该方法有一个或多个参数)
+
+2. unshift(元素1,...元素n)
+
+unshif()方法可以把参数指定的元素一次添加到数组的前面,并返回添加元素后的数组长度(该方法有一个或多个参数)
+   
+3. pop() 
+   
+pop()方法可以弹出(删除)数组最后一个元素,并返回弹出的元素
+
+4. shift()
+
+shift()方法可删除数组第一个元素,并返回删除的元素  
+
+5. splice(index,count,[元素1,...元素n])
+
+splice()功能比较强大,它可以实现删除指定数量的元素,替换指定元素以及指定位置添加元素,
+这些不同的功能的实现需要结合方法参数来确定:  
+
+当参数只有index和count两个参数时,如果count不等于0,splice()发给发实现删除功能,同时返回所删除的元素:
+从index参数指定位置开始删除, count参数指删除元素的个数  
+
+当参数为3个以上,且count部位0时,splice()方法实现天魂功能,同时返回所替换的元素:
+用第三个及其之后的参数替换index参数指定位置开始count参数指定个数的元素  
+
+当参数为3个以上,且count参数为0时,splice()方法实现添加功能:用第三个及其之后的参数添加到index参数指定位置上  
+
+splice()方法实现的各个功能实例如下  
+
+```javascript
+let arr = ['A','B','C','D'];
+
+// 2个参数,第二个参数不为0,实现删除功能
+/*
+console.log(arr.splice(0,2))
+console.log(arr) //C,D
+*/
+
+arr = ['A','B','C','D'];
+// 3个参数,第二个参数部位0,实现替换功能: 用a替换A返回A
+console.log(arr.splice(0,2))
+console.log(arr) //a,B,C,D
+
+arr = ['A','B','C','D'];
+//4个参数,第二个参数为0,实现添加功能,在下标为 1 处添加 aaa,bbb 没有返回值
+
+console.log(arr.splice(1,0,'aaa','bbb'))
+alert(arr);// A,aaa,bbb,B,C,D
+
+```
+
+6. slice(index1,[idnex2])
+slice()方法返回包含从数组对象中的 `[index1,index2)` 之间的所有所有元素,
+   参数可以省略,省略时表示返回从index1位置开始一直到最后将位置的元素,需要注意的时,
+   该方法只是读取指定的元素,并不会对原数组作任何修改  
+   
+示例如下:
+```javascript
+let arr = ['A','B','C','D'];
+console.log(arrs.slice(0,3)) //A,B,C
+console.log(arr) //A,B,C,D
+```
+
+7. sort(),sort(compareFunction)
+sort() 方法用于按某种规则排序数组:当方法的参数为孔氏,按字典序(即元素的Unicode编码从大到小排序顺序)排序数组元素;
+   当参数为一个函数时,按匿名函数指定的规则排序数组元素,sort()排序后返回排序候得数组
+   
+```javascript
+let arr = ['a','d','e','c']
+console.log(arr.sort());//a,c,d,e
+console.log(arr)//a,c,d,e
+
+// sort()默认是对每个元素按字符串进行排序,排序时会从左到右位比骄傲元素的每个字符,
+// 对应位的unicode编码大的就意味着这个元素大,此时将不再对后买你的字符进行比较;
+//对应字符相同时才比较后面位置的字符,显然上述数组使用了sort的默认排序规则人;
+arr = [1,76,8]
+arr.sort();
+console.log(arr) // 1,,78,8
+```
+
+通过匿名函数指定的规则排序数组  
+```javascript
+arr = [1,76,8];
+arr.sort(function (a,b){
+    return a-b; //从小到大排序
+    //return b-a//从大到小排序
+})
+
+alert(arr) //1,8,76
+```
+
+8. concat(数组1,...数组n)  
+concat()将参数指定的数组和当前数组连成一个新数组,
+   
+```javascript
+let arr1 = [1,2,3]
+let arr2 = [4,5,6]
+let arr3 = [7,8,9]
+console.log(arr1.concat(arr2,arr3)) // 1,2,3,4,5,6,7,8,9
+```
+
+9.reverse()
+
+reverse()方法可返回当前数组倒序形式
+```javascript
+let arr = [1,2,3]
+console.log(arr.reverse())
+```
+
+10. join()
+
+join()方法可以将数组内各个元素按参数指定的分割符连成一个字符串;参数可以省略,
+参数省略时,分隔符默认为都"逗号"
+
+11. forEach()
+
+forEach方法用于对数组的每个元素执行一次回调函数
+
+语法如下
+```javascript
+Array.forEach(function (currentValue,[index,array]),thisArg)
+```
+
+forEach()方法的第一个参数为array对象中每个元素需要调用的函数
+
+forEact()方法中的各个参数说明如下:  
+- currentValue参数:必须参数,表示正在数组里的元素(当前元素);
+- index参数:可选参数,表示正在处理的当前元素的索引;
+- array参数:可选参数,表示正在操作的数组  
+- thisArg参数, 可选参数通常为this,为空时取值为undefined
+
+forEach()函数的返回值为undefined
 
 
+12. filter()
+
+filter()方法用于创建一个新的数组,其中的元素是指定数组中所有符合指定数组要求的元素;
+
+语法如下: 
+```javascript
+Array.filter(function (currentValue,[index,array]),[thisArg])
+```
+
+filter()方法的第一个参数为回调函数,array对象中每个元素都需要调用该函数,
+filter()会返回所有使回调函数返回值为true的元素
+
+filter()函数返回一个新数组,其中包含了指定数组中所有符合条件的元素,如果没有符合条件的元素则返回空数组
+
+
+13. map()
+map()方法用于创建一个新的数组,其中的每个元素是指定数组的对应元素调用指定的函数处理后的值
+    
+语法如下:
+```javascript
+Array.map(function(current,[index,array]),[thisArg])
+```
+
+map()方法的第一个参数为回调函数,array对象中每个元素都需要调用该函数  
+
+```javascript
+let arr = [1,2,3] //原数组
+var nums = arr.map(function (item){//对原数组中的每个元素*2,将值分别存储在num数组中
+    return item*2
+})
+
+console.log(nums) // 2,4,6
+```
+
+14. reduce() 
+
+reduce()用于使用回调函数对数组中的每个元素进行处理,并 将处理进行汇总返回,语法如下:  
+```javascript
+Array.reduce(function(result,currentValue,[index,array]),[initialValue])
+```
+reduce()方法的第一个参数为回调函数  
+- result参数: 必须参数,表示返回值或回调函数执行后的返回值,在第一个调用回调函数前,
+  result参数表示初始值;在调用回调函数之后,result参数表示回调函数执行后的返回值
+
+需要注意的是,如果指定了initialValue参数,则初始值就是initialValue参数值,
+否则初始值为数组的第一个元素  
+
+- intialValue参数,可选参数,作第一次调用回调函数时的第一个参数的值,如果没有提供该参数,
+  第一次调用回调函数时的第一个参数将使用数组的第一个元素  
+
+
+需要注意的时: 对一个空数组抵用reduce()方法时,如果没有指定initialValue参数吃屎将会报错
+
+reduce的使用示例如下:
+```javascript
+let num1 = [1,3,6,9];
+// 没有提供initialValue参数
+var num2 = num1.reduce(function (v1,v2){
+    return v1 + v2 * 2
+})
+
+console.log(num2) // 27
+
+
+//提供了initialValue参数
+
+var num3 = num1.reduce(function (v1,v2){
+    return v1 + 2 * v2
+},2)
+
+// num3 = 40
+
+```
+上述示例中，1 处调用的 reduce() 没有指定 initialValue 参数，因而初始值为数组的第一个元素，即 1，此时 reduce() 的执行过程等效于：
+1+2*3+2*6+2*9 运算表达式的执行，结果返回 37。
+
+2处调用的 reduce()指定了值为 2 的 initialValue 参数，
+因而初始值为 2，此时 reduce() 的执行过程等效于：
+2+2*1+2*3+2*6+2*9 运算表达式的执行，结果返回 40
+
+15. find()
+
+find()用于获取使回调函数值为true的第一个数组元素,如果没有符合条件的元素,则返回undefined
+
+语法如下: 
+```javascript
+Array.find(function (currentValue,[index,array[]]),[thisArg])
+```
+
+find()函数使用示例如下: 
+```javascript
+let names = ["kak","qwq","QwQ",'BwB','OwO','kakaxi']
+
+let name = names.find(function (item){ //返回名字数组中名字大于或等于4的第一个名字
+    return item.length >= 4
+})
+console.log(name) // kakaxi
+```
 
 
 
