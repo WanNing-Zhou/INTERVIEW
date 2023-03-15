@@ -1822,12 +1822,328 @@ DOM事件模型分为两种: 事件捕获时事件冒泡
     - 动画运行时,对动画的控制程度上,js能够让动画,暂停,取消,终止,css动画不能添加事件   
     - 动画性能上,js动画多了一个js机械过程,新能不如CSS动画好
     
-  
+
+## 50 event 对象常见应用?  
+
+1. event.preventDefault()//阻止默认行为,阻止A链接默认的跳转行为  
+2. event.stopPropagation() //阻止冒泡  
+3. event.stopImmediatePropagation() //按钮绑定了2各响应函数,'依次注册a,b两个事件,点击按钮,a事件中添加event.stopOmmdeatePropagation()就能阻止b事件'  
+4. event.currentTarget //当前绑定的事件, event.target
+
+## 51. dom和bom的区别
+
+1. bom
+    - BOM 时Browser Object Model 的缩写,即浏览器对象模型
+    - BOM没有相关的标准
+    - BOM的根本对象时window
+    
+2. dom
+    - DOM时Document Object Model的缩写,即文档对象模型
+    - DOM时W3C的标准
+    - DOM最根本对象时document(实际上是window.document)
+    
+## 52 获取元素位置  
+
+1. 通过元素的offsetLeft和offsetTop  
+    dom元素的offsetLeft,offsetTop指的是元素对其offsetParent指定的坐标来说;
+   offsetParent: 是指当前元素最近的经过定位的父级元素,如果没有则一直向上直至body,注意当前元素为fixed时,其offsetParent的值为null  
+2. evnent.clientX 和 event.clientY  
+    事件相对于文档的水平和垂直距离  
+   
+3. getBoundingClientRect  
+    方法返回一个一个矩形对象,包含四个属性:left,top,right,和bottom,分别表示元素各边于页面上面和左边的距离  
+   
+## 53. 绑定事件和解除事件的区别  
+
+1. 事件绑定  
+    定义: 一个事件可以添加多次,且不会覆盖  
+   
+2. 绑定方法  
+    - attachEvent('on+事件名',函数名) 这个只兼容ie 6-8  
+    - addEventListener(事件名,函数名,false) 只是ie9+ chrom firfox  
+    
+绑定事件的封装  
+
+```javascript
+function addEvent(obj,sEv,fn){
+    if(obj.addEventListener){
+        obj.addEventListener(sEv,fn,false);
+    }else{
+        obj.attachEvent('on'+sEv,fn);
+    }
+};
+```
+解除绑定事件的封装: 
+```javascript
+function removeEvent(obj, sEv, fn) {
+    if (obj.removeEventListener) {
+        obj.removeEventListener(sEv, fn, false);
+    } else {
+        obj.detachEvent('on' + sEv, fn);
+    }
+}
+```
+
+## 54. 谈谈事件委托的理解?  
+
+JavaScript事件代理可以通过把事件处理器添加到一个上一级元素上来实现;
+这样就避免了把事件处理添加到多个子级元素上,当我们需要对很多元素添加事件的时候,
+可以通过将事件添加到他们的上级元素而将事件委托给上级元素来触发处理函数;
+这主要得益于浏览器的事件冒泡机制;事件代理用到了两个在JavaScript事件中常被忽略的特性;
+事件冒泡以及目标元素  
+
+优点:  
+1. 减少事件注册,节省内存  
+2. 简化了dom节点更新时,相应事件的更新,
+
+缺点:   
+1. 事件委托基于冒泡,对于不冒泡的事件不支持  
+2. 层级过多,冒泡过程中,可能会被某层阻止掉;
+3. 理论上委托会导致浏览器频繁调用处理函数,虽然很可能不需要处理,所以建议就近委托  
+4. 把所有事件都用代理,可能会出现事件物误判;
+
+
+## 55. JavaScirpt中的定时器有哪些? 他们得的区别时什么?  
+
+1. JavaScript中的定时器有以下几种
+    1) setTimeout() 方法用于在指定毫秒数后掉哟个函数或计算表达式  
+    2) setInterval() 方法可按照指定的周期(以毫秒计)来调用函数或计算表达式  
+    setInterval()方法会不停的调用函数,知道clearInterval被调用或窗口被关闭,
+       setInterval()返回的ID可以作为clearInterval()方法的参数
+       
+## 56. 比较attachEvent和addEventListener?
+
+attachEvent 方法可以动态的为网页内的元素添加一个事件,通常你想为某个按钮添加一个单击事件时,
+你都会在按钮上写上onclick=事件名称.使用attchEvent则不必这样做,
+把一个写好的事件准鄂毕好,在需要的时候给元素绑定上再执行,而且attachEvent支持位某个元素绑定多个事件,
+执行顺序是,后绑定的先执行,后果想删除事件请使用detachEvent  
+attachEvent方法指支持IE浏览器,与其功能相同的指令是addEventListener,该指令支持FF等浏览器,并且是W3C标砖  
+
+`语法:Element.attchEvent(Etype,EventName) `
+↑ 正经人谁兼容IE啊  
+
+
+
+addEventListener方法是W3c标准,
+语法:   
+`Element.addEventListener(Etype,EventName,bool)`
+参数说明:  
+
+- Etype:事件类型,如click,keyup,mousemove等 ,
+- EventName是回调函数名,
+- bool值: false 冒泡, true 捕获
+
+## 57. document.write和innerHTML的区别?  
+
+document.write是直接写入到页面的内容流,如果写在之前没有调用 document.open, 
+浏览器会自动调用open,每次写玩关闭之后重新调用该函数,会导致页面被重写  
+
+innerHTML则是DOM页面元素的一个属性,代表该元素的HTML内容,聂可以精确到某一个具体的元素进行更改,  
+如果想修改document的内容,则需要修改,document.documentElement.innerElement  
+
+innerHTML将内容写入某个DOM节点,不会导致页面全部重绘  
+innerHTML很多情况下都优于document.write其原因在于其允许更精确的控制  
+要刷新页面的哪一个部分  
+
+## 58. 什么是window对象? 什么是document对象?  
+
+1. 什么是window对象?  
+    简单来说,document是window的一个对象属性  
+   Window对象标识浏览器中打开的窗口  
+   如果文档包含框架(iframe或iframe标签),浏览器会位HTML文档创建一个window对象  
+   并为每个框架创建一个额外的window对象   
+   所有全局函数和对象都属于window对象的属性和方法  
+   document对Document对象的只读引用  
+   window对象他是一个顶层对象,而不是一个对象的属性,即浏览器窗口    
+   
+
+2. 什么是document对象?  
+
+该对啊ing是window和frams对象的一个属性,是显示于窗口或框架的一个文档  
+
+## 59. dom树和render树之间的关系?  
+
+1. dom树,css合并成渲染树(render树)  
+2. DOM树和HTML标签一一对应,包括head和隐藏元素
+3. 渲染树不包括head和隐藏元素,大段文本的每一行都是独立节点,
+    每一个节点都有对应的CSS属性  
+   
+## 60. 获取页面中所有CheckBox怎么做? 
+
+```javascript
+var domList = document.getElementByTagName('input')  
+var checkBoxList = [] 
+var len = domList.length;//缓存到局部变量  
+while(len--){ //使用filter可能会更好
+    //使用while效率会比for循环更高  
+    if(domList[len].type === 'checkbox'){
+        checkBoxList.push(domList[len])
+    }
+}
+
+
+```
+## 61. 简单说一下页面重绘和回流(已经被问烂了的问题)  
+
+1. **回流**: 当render tree 的一部分或全部的元素改变了自身的宽高,布局,显示或隐藏  
+    或元素内部的文字结构发生变化,导致需要重新构建页面的时候,回流就产生了
+   
+2. **重绘**: 当一个元素自身的宽高,布局,及显示或隐藏没有改变,只是改变了元素的外观风格的时候,就会产生重绘  
+
+> 重点: 回流必定触发重绘,重绘不一定触发回流  
+
+
+## 62. 如何最小化重绘(repaint)和回流(reflow)  
+
+需要对元素进行复杂的操作是,可以先隐藏(display:'none'),
+操作完成后再显示需要创建多个DOM节点是,使用DocumentFragment  
+创建完后一次性加如document缓存Layout属性值,如 var left = elem.offsetLeft;
+多次使用left只产生一次回流,尽量避免使用table布局(table元素一旦触发回流就会导致table里所有的其他元素回流)
+避免使用css表达式(expression),一位内每次调用都会重新计算值(包括加载页面)  
+见谅使用css属性间隙,如: 用border代替boder-width,border-style,border-color
+批量修改元素样式: elem.className 和 elem.syle.cssText代理elem.style.xxx
+
+## 63. Js延迟加载的方式由哪些? 
+
+js实现延迟加载的几种方法,js的延迟加载有助于提高页面的加载速度,JS延迟加载,也就是等页面加载完成之后再加载Javascirpt文件  
+
+一般由以下几种方法:  
+defer 属性  
+async 属性  
+动态创建DOM方式  
+使用jQuery的getScript方法  
+使用setTimeout延迟方法  
+让JS最后加载  
+
+
+
+1. defer属性
+    HTML4 为<script>标签定义了defer属性,标签定义了defer属性元素中设置defer属性,
+   等于高区浏览器立刻下载,但延迟执行标签定义了defer属性  
+   用途: 表明脚本再执行时不会影响页面的构造,也就是说,脚本会被延迟到整各也买你都解析完毕之后再执行  
+   
+再<script>元素中设置defer属性,等于告诉浏览器立即下载,但延迟执行  
+```html
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="test1.js" defer="defer"></script>
+    <script src="test2.js" defer="defer"></script>
+</head>
+<body>
+
+</body>
+</html>
+```
+说明: 虽然<script>元素放在了<head>元素中,但包含的脚本将延迟到浏览器遇到</html>标签后再执行  
+
+HTML5规范中要求脚本按照他们出现的先后顺序执行,在现实当中,延迟脚本并不一定会按照执行顺序执行  
+
+defer属性只适用于外部脚本文件,支持HTML5的试下会忽略嵌入脚本设置的defer属性  
+
+2. async 属性  
+
+HTML5 属性
+
+HTML5 为<script>标签定义了async属性,与defer属性类似,
+都用于改变处理脚本的行为;同样,只适用于外部脚本问价  
+目的不让页面等待脚本下载和执行,从异步加载页面其他内容,
+异步脚本一定会在页面load事件前执行,不能保证脚本会按顺序执行  
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="test1.js" async></script>
+    <script src="test1.js" async></script>
+</head>
+<body>
+
+</body>
+</html>
+```
+async和defer一样,都不会阻塞其他资源下载,所以不会影响页面的加载  
+缺点:不能控制加载的顺序  
+
+3. 动态创建DOM方式  
+
+```html
+<script>
+    function downloadJSAtOnload(){
+        var element = document.createElement("script")
+        element.src="defer.js"
+        document.body.appendChild(element)
+    }
+    if(window.addEventListener){
+        window.addEventListener("load",downloadJSAtOnload,false);
+    }else if (window.attachEvent){
+        window.attachEvent('onload',downloadJSAtOnload)
+    }else{
+        window.onload = downloadJSAtOnload;
+    }
+</script>
+```
+
+4. 是哟个Jquery的getScript()方法  
+```javascript
+$.getScript('outer.js',function (){
+    //回调函数,成功获取文件后执行的函数
+
+    console.log('脚本加载完成')
+})
+```
+
+5.适用setTimeout延迟方法的加载时间  
+延迟加载js代码,给网页加载流出更多事件  
+
+```javascript
+function A(){
+    console.log("hello world")
+}
+$(function (){
+    setTimeout(A(),1000)
+})
+```
+
+6. 让JS最后加载  
+把js外部引入的文件放到页面的底部,让js最后引入,从而加快页面的加载速度,
+   例如引入外部JS脚本我呢见时,如果放在html的head中,则页面加载前该js脚本就会被加载到页面  
+   而放入body中,则会按照页面从上倒下的加载顺序来运行javaScript的代码,
+   所以我们可以把js外部引入的文件放到页面底部,来让js最后引入,从而加快页面的加载速度  
+   
+## 64. typeof 和 instanceof区别
+
+在javascript中,判断一个变量类型可以用  
+1. 数字类型, typeof返回的时number  
+2. 字符串类型, typeof 返回的是 string 
+3. 布尔类型, typeof返回的是boolean
+4. 对象,数组,null返回的值是object,
+5. 函数类型,返回的值是function  
+6. 不存在的变量,函数或者undefined将返回undefined  
+
+在javascript中,instanceof用于判断某个对象是否被另一个对象构造  
+
+是哟个typeof运算符是采用引用类型会出现一个问题,无论引用的是什么类型的对象  
+它都会返回"Object", ECMAScript引入了另一个java运算符instanceof来解决这个问题  
+instanceof运算符与typeof运算符类似,用于识别这在处理对象的类型,  
+与typeof不同的是,instanceof方法要开发这明确地确认队形为某特定类型  
 
 
 
 
+   
 
+   
 
 
 
