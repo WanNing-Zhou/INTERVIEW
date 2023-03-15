@@ -1058,8 +1058,133 @@ css3新单位,相对于视口的宽度或高度中较小的那个
 
 ```
 
-### <h2 id="22">22.CSS动画</h2>
+### <h2 id="22">22.CSS动画</h2>  
+
+@keyframes规则,  
+要创建CSS3动画,你需要了解@keyframes规则  
+@keyframes规则是创建动画;  
+@keyframes规则,指定一个CSS样式和动画将逐步从目前的样式更改为新的样式  
+
+创建动画  
+
+```css
+@keyframes myfirst {
+    from {background-color: red}
+    to {background-color: yellow}
+}
+```
+
+当在@keyframes创建动画,把它绑定到一个选择器,否则动画不会有任何效果  
+指定至少这两个CSS3的动画属性绑定向一个选择器  
+
+- 规定动画的名称  
+- 规定动画的时长  
+
+```css
+div{
+    animation: myfirst 5s; //把myfirst动画捆绑到div元素,时长:5s
+}
+```
+> 注意: 你必须定义动画名称和持续事件,如果省略持续事件,动画将无法运行,因为默认值为0 
+
+CSS3动画是什么?  
+动画是使元素从一种样式逐渐变化为另一种样式的效果,  
+你可以改变任意多的样式任意多的次数,
+请用百分比来规定变化发生的时间,或关键词from和to 等同于 0% 和 100%  
+0%是动画的开始,100%是动画的完成  
+
+为了得到最佳的浏览器支持,你应该时钟定义0%和100%选择器  
+
+```css
+/*当动画为 25% 及 50% 时改变背景色，然后当动画 100% 完成时再次改变：*/
+
+@keyframes myfirst
+{
+    0%   {background: red;}
+    25%  {background: yellow;}
+    50%  {background: blue;}
+    100% {background: green;}
+}
+```
+CSS3的动画属性  
+下面的表格列出了@keyfame规则和多有动画属性  
+
+| 属性 | 描述 |
+|---:|---:|
+| @keyframes | 规定动画 |
+| animation | 所有动画属性的简写属性 |
+| animation-name | 规定@keyframes动画的名称 |
+| animation-duration | 规定动画完成一个周期所花费的秒或毫秒 默认是0 |
+| animation-timing-function | 规定动画的速度曲线;默认是ease |
+| animation-fill-mode | 规定当动画不播放时(当动画完成时,或当到你规划有一个延迟未开始播放时),要应用到元素的样式 |
+| animation-delay | 规定动画何时开始,默认是0 |
+| animation-iteration-count | 规定动画被播放的次数,默认是1 |
+| animation-direction | 规定动画是否在下一周期逆向播放,默认是"normal" |
+| animation-play-state | 规定动画是否正在运行或暂停,默认是running |
+
+```css
+div
+{
+    animation-name: myfirst;
+    animation-duration: 5s;
+    animation-timing-function: linear;
+    animation-delay: 2s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-play-state: running;
+    /* Safari 与 Chrome: */
+    -webkit-animation-name: myfirst;
+    -webkit-animation-duration: 5s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-delay: 2s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-direction: alternate;
+    -webkit-animation-play-state: running;
+}
+```
+
+
 ### <h2 id="23">23.CSS画三角形</h2>
+
+- border
+- linear-gradient
+- clip-path 
+
+1. **border**
+使用CSS回值三角形的第一种方法就是使用[border]属性,  
+   
+给定一个宽度和高度都为0的元素,其border的任何值都会直接相交,我们可以利用整个交点来创建三角形  
+也就是说,border属性是三角形组成的,
+
+```css
+.triangle {
+    width: 0;
+    height: 0;
+    border: 100px solid;
+    border-color: orangered skyblue gold yellowgreen;
+}
+```
+
+2. **linear-gradient**
+
+linear-gradient 需要结合 background-image 来实现三角形,
+```css
+background-image: linear-gradient(32deg, orangered 50%, rgba(255, 255, 255, 0) 50%);
+```
+3. **clip-path**  
+
+clip-path,它是最精简和最可具扩展性的,不过目前在浏览器兼容不是很好  
+clip-path可以为沿路放置的每个点定义坐标,就定义了三个点 `top-left(0,0),bottom-left(0% 100%),right-center(100, 50%)`
+```css
+.triangle{
+  margin: 100px;
+  width: 160px;
+   height: 200px;
+   background-color: skyblue;
+  clip-path: polygon(0 0, 0% 100%, 100% 50%);
+}
+```
+
 [三角形](https://zhuanlan.zhihu.com/p/482361933)
 ### <h2 id="21"></h2>
 ### <h2 id="21"></h2>
