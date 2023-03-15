@@ -1542,7 +1542,180 @@ console.log(name) // kakaxi
 ```
 
 
+## 43. 原生AJAX发送请求  
 
+1. Ajax是什么?  
+
+Ajax是一种使用现有技术集合,技术内容包括: HTML或XHTML, css,JavaScript,DOM,XML,XSLT,
+以及最重要的XMLHttpRequest  
+
+用于浏览器于服务器之间使用异步数据传输(HTTP请求),做到局部请求以实现局部刷新
+![img_1.png](img_1.png)
+
+2. Ajax的作用?  
+
+- 不刷新页面就更新网页(局部刷新)  
+- 在页面加载后从服务器请求数据
+- 在页面加载后从服务器接受数据  
+- 在后台向服务器发送数据
+
+
+3. 如何使用Ajax  
+
+- 创建XMLHTTPRequest对象  
+- 使用open方法设置和服务器交互的信息  
+- 设置requestHeader(),request.setRequestHeader(属性名称,属性值)  
+- send()设置发送的数据,开始和服务器端交互
+- 取得响应,注册事件  
+
+**发送get请求**  
+```javascript
+//1. 创建XMLHttpRequest对象  
+let xhr = new XMLHttpRequest()
+//2.调用open函数,指定请求方式与url地址  
+xhr.open('GET','httt://XXX') //如果需要带参数需要拼接到url地址后
+//3.调用send函数,发起ajax请求  
+xhr.send()
+//4.监听onreadystatechange事件
+xhr.onreadystatechange = function () {
+    //4.1监听xhe对象的请求状态readyState与服务器响应的状态Status
+    if(xhr.readyState === 4 && xhr.status === 200){
+        //if里面的判断条件第一个是状态,第二个是状态码
+        
+        //4.2打印服务器响应回来的而数据  
+        
+        console.log(xhr.responseText)
+    }
+}
+
+```
+
+
+**发送post请求**
+```javascript
+//1. 创建异步对象  
+var xhr = new XMLHttpRequest()
+//2.  设置请求行  
+//设置i青柠给i去行的时候,要调用异步对象的open方法  
+//一个参数表示请求方式,
+//第二个参数是请求的目标地址  
+xhr.open('post','http://xxx.com')
+//3. 这hi请求头 POST请求需要设置请求头,要不然数据发不过去   
+//因为POST请求时通过请求体发送的数据,需要对数据进行格式处理  
+
+xhr.setRequestHeader('content-type','application/x-www-form-urlencoded')
+// 4. 设置请求体  
+
+xhr.send('username='+'kakaxi') 
+
+//5.监听异步对象的状态变化  
+
+xhr.onreadystatechange = function () {
+    //一次成功的请求和响应包括两部分,
+    //一个时服务器接收到了请求并做出了正确的函数
+    //一个是六拉你去端发送了请求并接受到了服务器端响应回来的数据目的使用这些数据  
+    if(xhr.state===200 && xhr.readyState ===4){
+        //使用xhr.responseText  来接受服务端响应回来的数据
+        console.log(xhr.responseText)
+    }
+}
+
+```
+
+## 44. js的Symbol?
+
+概念:  
+symobol是ES6标准中新增的一种基本数据类型,在JavaScript中,共有七种数据类型:  
+string,number,bigint,boolean,null,undefined,symobol,  
+
+symbol的值是通过Symbol()函数生成,每一个symbol的值都是唯一的,并且symbol类型的值,
+可以作为对象的属性标识符使用,这也是symbol类型设计的目的;  
+所以现在对象属性命名可以为两种类型: 一种是原本的字符串类型,一种即为新增的symbol类型,  
+凡是使用symbol命名的属性都是独一无二的,保证不与其他属性名产生冲突  
+
+JavaScript种大多处的数值都支持隐式转换为字符串,单symbol不会转换:  
+
+```javascript
+let s1 = Symbol('sym');
+alert(s1); // TypeError: Cannot convert a Symbol value to a string
+
+```
+symbol不能与其他类型的值进行运算
+```javascript
+console.log('symobol is' + s1)  // TypeError: Cannot convert a Symbol value to a string
+```
+但是如果有必要,额可以手动将symbol转换成字符串  
+
+```javascript
+console.log(s1.toString())
+```
+或者获得定义symbol时的描述;
+
+```javascript
+alert(s1.description)
+```
+symbol转换为其他类型: 
+```javascript
+Boolean(s1);//true
+Number(s1); // TypeError: Cannot convert a Symbol value to a number
+parseInt(s1); // NaN
+```
+
+**用法**
+
+创建一个symbol的值需要使用Symbol()函数,而不能使用new命令
+
+```javascript
+let s1 =Symbol('sym')
+```
+
+用于生成的symbol是一个值而不是对象,所以不能为其添加属性  
+Symbol()函数可以接受一个字符串作为参数,标识对该值的藐视,因此即使定义symbol使用
+相同的参数互相之间也是不同的:
+
+```javascript
+let s1 = Symbol('sym')
+let s2 = Symbol('sym')
+s1 === s2 //false
+```
+**Symbol.for(),Symbol.keyFor()**  
+
+如果我们要重复使用一个symbol时,可以用到Symbol.for()方法,Symbol.for()方法接受一个字符串参数,  
+会在全局中搜索有没有该参数命名的symbol的值,如果查找到就返回这个值,  
+如果没有查到就生成一个新的值,并且该值以参数名称注册到全局  
+
+```javascript
+let s1 = Symbol.for('sym')//创建
+let s2 = Symbol.for('sym') //查找  
+s1 === s2 //true
+```
+
+Symbol.for()和Symbol()方法都会生成新的symbol类型的值,
+不同的是Symbol.for()方法会查找命名参数是否在全局中注册过,
+如果注册过就不会创建新的值,而是会直接返回,所以我们可以使用到相同的symbol值,
+但使用Symbol()方法每次都会创建一个新的值,且不会注册到全局  
+
+Symbol.keyFor()方法表示获取一个symbol的值在全局中注册的命名参数key,  
+只有使用Symbol.for()创建的值才会有注册的命名参数,使用Symbol()生成的值则没有: 
+
+```javascript
+let s4 = Symbol('sym')
+let s5 = Symbol.for('sym')
+Symbol.keyFor(s4); //undefined
+Symbol.keyFor(s5) //sym
+```
+
+注意使用Symbol.for()注册的全局命名参数是真正意义上的全局,而不管是否运行在全局环境  
+
+```javascript
+let iframe = document.createElement('iframe');
+iframe.src = 'http://www.baidu.com';
+document.body.append(iframe);
+iframe.contentWindow.Symbol.for('sym') === Symbol.for('sym'); // true
+```
+
+详细请参考:  
+[理解JavaScript基本数据类型symbol](https://blog.csdn.net/xcg132566/article/details/108109837)
 
 
 
