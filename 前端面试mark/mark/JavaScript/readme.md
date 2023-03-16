@@ -2246,7 +2246,259 @@ function removeImage() {
 }
 ```
 
+## 67. 硕说你对原型(prototype)的理解  
+
+JavaScript是一种通过原型实现继承的语言, 与别的高级语言是有区别的,像java,
+是通过类型决定继承关系的,JavaScript是动态的弱类型语言,总之可以认为JavaScript
+中所有的对象中都包含了一个"prototype"内部属性,这个属性所对应的就是该对象的原型  
+"prototype"作为对象的内部熟悉感,是不能被直接访问的,所以为了方便查看一个对象的原型,
+Firefox和Chrome内核的JavaScript引擎中提供了一个"proto"这个非标准的访问器(ECMA
+新标准中引入了标准对象原型访问器,"object.getPrototype(object)")  
+原型的主要作用就是为了实现继承与扩展对象  
+
+## 68. 介绍下原型链(解决的是继承问题吗)? 
+
+JavaScript原型,每个对象都会在其内部初始化一个属性,就是prototype(原型)
+
+原型链: 
+当我们访问一个对象的属性时,如果这个对象内部不存在这个属性,那么它就会去prototype里找这个属性,  
+这个prototype又会有自己的protype,于是就这样一直找下去,也就是我们平时所说的原型链概念  
+
+特点:  
+JavaScript对象时通过引用来传递的,我们创建的每个对象实体中国并没有一份属于自己的
+原型副本,当我们修改原型时,与之相关的对象会继承这一改变  
+
+
+## 69. 数组中 forEach 和 map 的区别  
+
+forEach 和 map的相同点  
+
+相同点: 都是循环遍历数组中的每一项  
+forEach和map方法里每次执行匿名函数都支持三个参数,参数分别是item(当前每一项),
+index(索引项),arr(原数组)   
+匿名函数中的this都是指向window,    
+只能遍历数组,都不会改变原组  
+
+**区别:**  
+
+|map方法|forEach方法 |
+| ---:| ---:|
+|1.map方法返回一个新的函数,数组中的元素为源是数组调用函数处理后的值|1.forEach方法用来调用数组的每个元素,将元素传给回调函数|  
+|2. map方法不对空数组进行检擦,map方法不会改变原始数组  |forEach对空数组不会调用回调函数的,无论arrr是不是空数组,forEach返回的都是undefined|
+|3. 若arr为空数组,则map方法返回的也是空数组  |这个方法只是将数组中的每一项作为callback的参数执行一次|
+
+## 70 new 操作符具体干了什么? 
+
+1. 创建一个空对象: 并且this变量引入该对象,同时还继承了函数的原型  
+2. 设置原型链 空对象指向构造函数的原型对象  
+3. 执行函数体, 执行构造安徽拿书this指针指向空对象,并执行函数体  
+4. 判断返回值, 返回对象就用该对象,没有的话就创建一个对象  
+
+## 71 Split()和join()的区别
+
+Split() 是把一串字符(根据某个分隔符)分成若干个元素存放在一个数组里,即切割成数组的形式  
+join()是把数组中的字符串连成一个长传,可以大体上认为是Split()的逆操作  
+
+## 72. 谈谈你对JavaScript垃圾回收机制的理解? 
+
+1. 标记清除  
+这是JavaScript最常见的垃圾回收方式,当变量进入执行环境的时候,比如函数中声明一个变量;  
+   垃圾回收器将其标记伪"进入环境",当变量离开环境的时候(函数执行结束)将其标记为'离开环境'
    
+垃圾回收器会在运行的时候给存储在内存中的所有变量家上标记,然后去掉环境中的变量以及
+
+2. 引入计数
+在低版本IE中经常出现内存泄露,很多时候就是因为其采用引用技术方式进行垃圾回收;
+   引用基础的策略是追踪记录每个值被使用的次数,当声明了一个变量,并将另一个引用类型
+   赋值给该变量的时候这个值的引用次数+1,如果变量的值变成了另外一个,则这个值的引用次数-1
+   ,当这个值的引用次数变为0的时候,说明没有变量在用,这个值就没法访问了,因此可以将其中
+   占用的空间回收,这样垃圾回收器会在运行的时候清理掉引用次数为0的值占用的空间,在IE中虽然   
+   JavaScript对象通过标记清除的方式进行垃圾回收,但BOM和DOM却是通过引用计数回收垃圾的,
+   也就是说只要涉及BOM和DOM就会出现循环引用问题  
+   
+## 73 Class和普通构造函数有何区别?  
+
+js构造:  
+```javascript
+function MathHandle(x,y){
+    this.x = x
+    this.y = y
+}
+MathHandle.prototype.add = function (){
+    return this.x + this.y
+}
+var m = new MathHandle(1,2)
+console.log(m.add())
+
+
+//class基本语法:
+class MathHandle{
+    constructor(x,y){
+        this.x = x
+        this.y = y
+    }
+    add(){
+        return this.x + this.y
+    }
+}
+
+const m = new MathHandle(1,2)
+console.log(m.add())
+```
+ 
+认为:class实际上是一个句法糖:  
+```javascript
+console.log(typeof MathHandle) //function  
+console.log(MathHandle.prototype.constructor === MathHandle)//true
+console.log(m.__proto__ === MathHandle.prototype) //true
+```
+
+> 总结:  
+> Class在语法省更加贴合面向对象的写法 
+> Class实现继承更加易读,易理解
+> 更易于写 java 等后端语言开发者的使用
+> 本质上还是语法糖,使用prototype  
+
+## 74 什么是js事件循环 event loop 
+
+主线程"任务队列"中读取事件,这个过程是循环不断的,所以整个的这种运行机制又称为
+Event Loop(事件循环)   
+
+## 75 JS里垃圾回收机制是什么,常用的是那种? 怎么处理的?  
+
+JS的垃圾回收机制是为了以防内存泄露,内存泄露的含义就是当已经不需要某块内存时,这块内存还存在着,
+垃圾回收机制就是为了间歇不定期的寻找到不再使用的变量,并释放掉他们所指向的内存
+
+js中最常见的垃圾回收方式就是标记清除  
+工作原理: 当变量进入环境时,将这个变量标记为"进入环境",则将其标记为"离开环境",标记"离开环境"的就回收内存  
+
+工作流程": 
+
+垃圾回收器,在运行的时候会给存储在内存中的所有变量都加上标记,  
+去掉环境中的变量以及被环境中的变量引用的变量的标记  
+再被加上标记的会被视为准备删除的变量  
+垃圾回收器完成内存清除工作,销毁哪些带标记的值,并回收他们所占用的内存空间  
+
+## 76 js如何处理防抖何节流  
+
+在进行窗口的resize,scroll,输入框内容校验等操作时,如果事件处理函数调用的频率无限制,
+会加重浏览器的负担,导致用户体验非常糟糕  
+此时我么可以采用debounce(防抖)何throttle(节流)的方式来减少是哟个频率,
+同时又不影响实际效果  
+
+函数防抖:  
+函数防抖(debounce):当持续触发事件时,一定时间段内没有再触发事件,事件处理函数才会执行一次,
+如果设定的事件到来之前,又一次触发事件,就重新开始延时  
+如下,持续触发scroll事件时,并不执行handle函数,当1000毫秒内没有触发scroll事件时,
+才会延时触发scroll事件  
+
+```javascript
+function debounce(fn,wait){
+    var timeout = null;
+    return function(){
+        if(timeout !== null) clearTimeout(timeout);  //如果
+        timeout =setTimeout(fn,wait)
+    }
+}
+// 处理函数 
+function handle(){
+    console.log(Math.random())
+}
+//滚动事件  
+window.addEventListener('scroll',debounce(handle,1000))
+
+```
+
+函数节流:  
+
+函数节流(throttle): 当持续触发事件时,保证一定时间段内只调用一次事件处理函数,
+节流的现实用途比如王者荣耀的攻击键: 短时间内多次按下攻击键,在一段时间内只有第一次
+点击攻击是有效的;
+
+如下: 持续触发scroll事件时,并不立刻执行handle函数,每隔1000毫秒才会执行一次
+handle函数:  
+
+```javascript
+let throttle = function (func,delay){
+    var prev = Date.now();
+    return function (){
+        var args = arguments;
+        var context = this;
+        var now = Date.now();
+        if(now - prev >= delay){
+            func.apply(context,args)
+        }
+    }
+}
+
+function handle() {
+    console.log(Math.random())
+}
+window.addEventListener('scroll',throttle(handle,1000))
+```
+
+总结:  
+
+> 函数防抖:  
+> 将击此操作合并为一次操作进行,原理时维护一个定时器,规定在delay时间后触发函数,
+> 但是在delay时间内再次触发的话,就会取消之前的计时器而重新设置,这样一来只有最后一次操作能被触发  
+> 
+> 函数节流: 
+> 使得一定时间内只触发一次函数,原理是通过判断是否达到一定时间来触发函数   
+> 
+> 区别:  
+> 函数节流不管事件触发有多频繁,都会保证再规定事件内一定执行有一次真正的事件处理函数,
+> 而防抖只是在最后一次事件后才触发一次函数,比如在页面的无限加载场景下,我们选哟用户在
+> 滚动页面时,每隔一段时间触发一次ajax请求,而不是在用户停下滚动页面操作采取请求数据,
+> 这样的场景就适合用节流
+> 
+
+
+## 77 Eval 是做什么的? 
+
+1. eval()的作用  
+    把字符串解析成js代码并运行,返回执行的结果  
+   例如:
+   
+```javascript
+eval("2+3") //执行加运算,并返回运算值  
+eval("var age=10")//声明一个age变量   
+```
+   
+2. eval的作用域在它所有的范围内容有效  
+```javascript
+function a(){
+    eval("var x = 1")  //等效于 var x = 1
+    console.log(x) //1
+}
+a();
+console.log(x)//错误 x没有定义
+```
+
+```javascript
+function a(){
+    window.eval('var x=1') //等效于window.x=1, 定义了全局变量
+
+    console.log(x)// 输出1
+}
+
+a()
+
+console.log(x) //输出1
+```
+
+3. 注意事项  
+应该避免使用eval 不安全,非常耗性能(2次,一次解析成js语句,一次执行)  
+   
+4. 其他作用  
+由json字符串转换为JSOJN对象的时候可以用eval,例如  
+   
+```javascript
+    var json = "{name:'ZWN',age:99}"
+    var jsonObj = eval(`{${json}}`)
+console.log(jsonObj)
+
+```
 
 
 
