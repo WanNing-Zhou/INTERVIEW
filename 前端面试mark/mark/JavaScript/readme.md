@@ -2139,9 +2139,112 @@ instanceof运算符与typeof运算符类似,用于识别这在处理对象的类
 与typeof不同的是,instanceof方法要开发这明确地确认队形为某特定类型  
 
 
+## 65. js适用typeof能得到哪些类型?  
+
+typeof 只能区分值类型  
+typeof undefined //undefined   
+typeof null //object
+typeof console.log //function
+typeof NaN //number  
+
+## 66. 哪些操作会造成内存泄露?  
+
+1. 垃圾回收器定期扫描对象,并计算引用了每个对象的其他对象的数量,
+如果一个对象的引用数量为0(没有其他对象引用过该对象),或对该对象的
+   唯一引用是循环的,那么该对象的内存即可回收
+
+2. setTimeout 的第一个参数使用字符串而非函数的话,会引发内存泄露  
+
+3. 闭包,控制台日志,循环(在两个对象彼此引用或彼此保留时,就会产生一个循环)  
 
 
+## 67. JS内存泄露的解决方式
+
+1. global variables: 对未声明的变量引用子在全局对象内创建一个新变量,  
+在浏览器中,全局对象时window
+
+
+```javascript
+function foo(arg){
+    bar='some text'//等同域window.bar = 'some text'
+}
+```
+创建意外的全局变量  
+```javascript
+function foo(){
+    this.var1 = 'potential accident'
+}
+```
+解决: 
+- 可以在JavaScript文件开头添加"use strict"使用严格模式,
+这样严格模式下解析JavaScript可以防止意外的全局变量
+- 在使用完之后,对其赋值未null或者重新分配  
+
+2. 被忘记的Times 或者 callbacks
+在JavaScript中使用setInterfval非常常见
+   大多数库都会体哦那个观察者或者其他工具来处理回调函数,在他们自己的示例变为不可达时,
+   会让回调函数也变为不可达的,对于setInterval,下面这样的代码非常常见  
    
+```javascript
+var serverData = loadData();
+setInterval(function () {
+    var renderer = document.getElementById('renderer');
+    if (renderer) {
+        renderer.innerHTML = JSON.stringify(serverData);
+    }
+}, 5000); //This will be executed every ~5 seconds
+```
+这个例子阐述者times可能发生的情况,计时器会引用不再需要的节点或数据
+
+3. 闭包: 一个可以访问外部(封装) 函数变量的内部函数  
+
+JavaScript开发的一个关键方面就是闭包,一个可以访问外部(封闭)函数变量的那日不函数;
+由于JavaScript 运行时的实现细节,可以通过以下方式泄露内存:  
+
+```javascript
+
+var theThing = null;
+var replaceThing = function () {
+    var originalThing = theThing;
+    var unused = function () {
+        if (originalThing) // a reference to 'originalThing'
+            console.log("hi");
+    };
+    theThing = {
+        longStr: new Array(1000000).join('*'),
+        someMethod: function () {
+            console.log("message");
+        }
+    };
+};
+setInterval(replaceThing,1000);
+```
+4. DOM引用  
+
+有时候在数据结构中DOM结构式有用的,假设要快速更新表中的几行内容,
+将每行DOM的引用存储在字典或数组中,可能是有意义的,当这种情况发生时,
+就会保留同一DOM元素的两份引用,一个在DOM树种,
+另一个在字典中,如果未来某个时候你要删除这些,则需要让两个引用都不可达
+  
+```javascript
+
+var elements = {
+    button: document.getElementById('button'),
+    image: document.getElementById('image')
+}
+
+function doStuff() {
+    elements.image.src = 'http://example.com/image_name.png';
+}
+
+function removeImage() {
+// The image is a direct child of the body element.
+    document.body.removeChild(document.getElementById('image'));
+// At this point, we still have a reference to #button in the
+//global elements object. In other words, the button element is
+//still in memory and cannot be collected by the GC.
+}
+```
 
    
 
