@@ -2500,6 +2500,11 @@ console.log(jsonObj)
 
 ```
 
+## 78  什么是任务队列? 
+
+任务队列(task queue)主要分为两种: 
+1. 宏任务(macrotask): 在新标准中叫task  
+    主要包括:script(整体代码)
 
 
 
