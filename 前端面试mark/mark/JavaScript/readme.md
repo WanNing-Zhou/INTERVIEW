@@ -2509,6 +2509,209 @@ console.log(jsonObj)
 1. 宏任务(macrotask): 在新标准中叫task  
     主要包括:script(整体代码)
 
+## 79. ES6 Generator函数
+
+1. **Generator**
+
+常规函数会返回一个单一直(或者不反回任何值)
+而Generator可以按需一个接一个地返回('yield')多个值,他们可与`iterable`完美配合使用,从而可以轻松地创建数据流
+
+2. **Generator函数**
+
+要创建一个generator,我们需要一个特殊的语法结构: `function*`,即所谓的"generator function"
+
+它看起来像这样
+
+```js
+function* generateSequence(){
+    yield 1;
+    yield 2;
+    return 3;
+} 
+```
+
+Generator函数与常规函数的行为不同,再此类函数被调用时,他不会运行其代码,而是返回一个被称为`generator object`的特殊对象,来管理执行流程
+
+```js
+function* generateSequence(){
+    yield 1;
+    yield 2;
+    return 3;
+} 
+
+//generator function 创建了一个 generator object
+let generator = generateSequence()
+console.log(generator);//[object Generator]
+```
+
+到目前位之,上面这段代码中的函数体代码还没有开始执行
+![img_2.png](img_2.png)
+
+一个generator的主要方法时`next()`,当next()被调用时,他会恢复上图所示的原型,执行到`yield<value>`语句(`value`可以被省略,默认为`undefined`)然后函数执行暂停,并将产生(yielded)值返回到外部代码,`next()`的结果始终是一个具有两种属性的对象:
+- `value`:阐述的(yielded)的值
+- `done`: 如果generator函数已经执行完成则为`true`否则为`false`
+
+例如,我们可以创建一个generator并获取其第一个产出的`yielded`值:
+```js
+function* generateSequence(){
+    yield 1;
+    yield 2;
+    return 3;
+}
+
+let generator = generateSequence();
+let one = generator.next();
+alert(JSON.stringify(one))//{{value:1,done:false}}
+```
+截至目前,我们只获得了第一个值,现在寒湖执行在第二行:
+让我们再次调用`generator.next()`,代码恢复执行并返回下一个`yield`的值:
+```js
+let two = generator = generator.next()
+alert(JSON.stringify(two)) //{value:2,done:false}
+```
+![img_3.png](img_3.png)
+
+
+如果我们第三次调用`generator.next()`代码将会执行到`return`语句,此时就完成这个函数的执行:
+```js
+let three = generator.next()
+
+alert(JSON.stringify(three))//{value:3,done:ture}
+```
+![img_4.png](img_4.png)
+
+现在generator执行完成,我们通过`done:ture`可以看出来这一点,并且安静`value:3`处理为最终结果,
+
+再对`generator.next()`进行新的调用不再有人恶化意义,如果我们这样做,他将返回相同的对象:`{done:true}`
+
+> `function* f(...)`或`function *f(...)`?
+> 这两种语法都是对的,
+> 但是通常更倾向于第一种语法,一位内星号`*`表示它是一个generator函数,它描述的是函数种类而不是名称,因此`*`应该和`function`关键字紧贴一起
+
+### Generator 是可迭代的
+
+当你看到`next()`方法的时候, 就能菜刀generator是可迭代的(iterable)的(next()是iterator的必要方法)
+
+我们可以使用`for..of`循环遍历它所有的值
+
+```js
+function* generateSequence(){
+    yield 1;
+    yield 2;
+    return 3;
+}
+
+let generator = generateSequence();
+
+for(let value of generator){
+    console.log(value) // 1, 然后是2
+}
+```
+上面的例子不会显示3!
+
+这是因为当 `done:true`时,`for..of`循环回忽略最后一个`value`,因此,如果我们想要通过`for...of`循环显示所有的结果,我们必须使用`yield`返回他们:
+
+```js
+function* generateSequence(){
+    yield 1;
+    yield 2;
+    return 3;
+}
+let generator = generateSequence();
+
+for(let value of generator) {
+    alert(value); // 1，然后是 2，然后是 3
+}
+```
+
+
+因为generator时可迭代的,我们可以使用iterator的所有相关功能,例如: spread语言`...`"
+
+```js
+function* generateSequence() {
+  yield 1;
+  yield 2;
+  yield 3;
+}
+
+let sequence = [0, ...generateSequence()];
+
+alert(sequence); // 0, 1, 2, 3
+```
+
+### 使用generator进行迭代
+
+```js
+let range = {
+  from: 1,
+  to: 5,
+
+  // for..of range 在一开始就调用一次这个方法
+  [Symbol.iterator]() {
+    // ...它返回 iterator object：
+    // 后续的操作中，for..of 将只针对这个对象，并使用 next() 向它请求下一个值
+    return {
+      current: this.from,
+      last: this.to,
+
+      // for..of 循环在每次迭代时都会调用 next()
+      next() {
+        // 它应该以对象 {done:.., value :...} 的形式返回值
+        if (this.current <= this.last) {
+          return { done: false, value: this.current++ };
+        } else {
+          return { done: true };
+        }
+      }
+    };
+  }
+};
+
+// 迭代整个 range 对象，返回从 `range.from` 到 `range.to` 范围的所有数字
+alert([...range]); // 1,2,3,4,5
+```
+
+
+我们可以同故宫一个Generator作为`Symbol.iterator`,来使用generator进行迭代:
+下面是一个相同的 range，但紧凑得多：
+```js
+let range = {
+  from: 1,
+  to: 5,
+
+  *[Symbol.iterator]() { // [Symbol.iterator]: function*() 的简写形式
+    for(let value = this.from; value <= this.to; value++) {
+      yield value;
+    }
+  }
+};
+
+alert( [...range] ); // 1,2,3,4,5
+```
+
+
+之所以代码正常工作,是因为`range[Symbol.iteratot]()`现在返回一个generator,而generator方法正是`for..of`所希望的
+- 它具有.next()方法
+- 他以`{value:...,done:true/false}`的形式返回值
+
+当然,这不是巧合,Generator被添加到JavaScript语言中有对iterator的考量的,以便更容易的实现iterator
+
+带有generator的变化比原来`range`迭代代码简洁得多,并且保持了相同得功能  
+
+``` 
+Generator可以永远产出(yield)值
+
+在上面得示例中,我们生成了有限序列,当时我们也可以创建一个无限序列的generator,它可以一直阐述(yield)值,例如,无序的伪随机数序列
+
+这种情况下肯定需要在generator的`for..of`循环中添加一个break(或者return,)否则循环将永远重复下去并挂起
+
+```
+
+
+
+
+
+
 
 
 
