@@ -1749,8 +1749,79 @@ watch: {
 <router-view :key="$route.fullpath"></router-view>
 ```
 
-## <h2 id="40"></h2>
-## <h2 id="40"></h2>
+## <h2 id="45"> 45. Vue常用的修饰符都有哪些?</h2>
+Vue常用的修饰符一般分为**表达那修饰符**(v-model修饰符)和**事件修饰符**
+
+### 1. 表单修饰符
+
+1. `.lazy`
+
+输入框改变,这个数据就会改变, lazy这个修饰符会在光标离开`input`框才会更新数据:
+```html
+<input type="text" v-model.lazy="value">
+```
+2. `.trim`
+
+输入框过滤首尾的空格:
+```html
+<input type="text" v-model.trim="value">
+```
+
+3. `.number`
+
+先输入数字就会限制输入只能是数字,先字符串就相当于没有加number,注意,不是输入框不能输入字符串,是这个数据是数字
+```html
+<input type="text" v-model.number="value">
+
+```
+
+### 2. vue事件修饰符
+
+1. `.stop`
+
+阻止冒泡,相当于调用了event.stopPropagation()方法:
+
+```html
+<button @click.stop="test">test</button>
+```
+
+5. `.prevent`
+
+阻止默认行为,相当于调用了event.preventDefault()方法,比如表单的提交,a标签的跳转就是默认事件
+```html
+<a @click.prevent="test">test</a>
+```
+
+6. `.self`
+只有元素本山触发时才触发方法,就是只有点击元素本身才会触发,比如一个div里面有个按钮,div和按钮都有事件,我们点击按钮,div绑定的方法也会触发,
+   如果div的click上加上self,只有点击div的时候才会触发,变相的算是阻止冒泡
+   
+```html
+<div @click.self="text"></div>
+```
+
+7. `.once`
+
+事件只能用一次,无论点击几次,执行一次之后都不会再执行
+```html
+<div @click.once="text"></div>
+```
+
+8. `.capture`
+
+`capture`的作用添加事件侦听器时使用事件捕获模式,即是给元素添加一个监听器,当元素发生冒泡时,先触发带有该修饰符的元素,若有多个该修饰符,则由外而内触发
+
+9. `.sync`
+
+对prop进行双向绑定
+
+10. `.keyCode`
+
+监听按键的指令,具体可以查看vue的键码对应表
+
+
+
+## <h2 id="46"></h2>
 
 
 
