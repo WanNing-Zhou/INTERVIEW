@@ -2707,9 +2707,139 @@ Generator可以永远产出(yield)值
 
 ```
 
+## 80 实现一个 Promise?
+
+Promise是如恶化实现异步加载的呢? 其实Promise并没有那么什么;
+
+它的本质就是一个状态机
+
+想要实现一个Promise其实很简单, 状态机, 我们需要几个参数:
+
+- _success_res 用来存储成功时的的参数
+- _error_res 用来存储失败时的参数
+- _status 用来存储状态
+- _watchList 用来促成农户执行队列
+
+下面就手动实现一个Promise
+
+```js
+class Promise1{
+    constructor(fn){
+        //执行队列
+        this._watchList = []
+        //成功结果
+        this._success_res = null
+        //失败结果
+        this._error_res = null
+        //状态
+        this._status = "";
+        
+        fn((...args)=>{
+            //保存成功数据
+            this._success_res = args;
+            //状态改为成功
+            this._status = 'success'
+            //若为异步则回头执行then成功方法
+            this._watchList.forEach(element=>{
+                element.fn1(...args)
+            })
+        },(...args)=>{
+            //保存失败数据
+            this._error_res = args;
+            //状态改为失败
+            this._status = 'error'
+            //若为异步函数则回头执行then失败方法
+            this._watchList.forEach(element=>{
+                element.fn2(...args);
+            })
+        });
+    }
+    
+    //then函数
+    then(fn1,fn2){
+        if (this._status === 'success'){
+            fn1(...this._success_res)
+        }else if(this._status === error){
+            fn2(...this._error_res)
+        }else{
+            this._watchList.push(
+                {
+                    fn1,
+                    fn2
+                }
+            )
+        }
+    }
+    
+    
+}
+```
+这样就见到那实现了Promise的功能,在使用上和JS的Promise并无其他区别,若想实现Promise.all方法,则只需要进行小小的迭代
+
+
+```js
+Promise1.all = function(arr){
+    //存放结果集
+    let result = []
+    return Promise1(function (resolve,reject){
+        let i = 0;
+        //进行迭代执行
+        function next(){
+            arr[i].then(function (res) {
+                //存放每个方法的返回值
+                result.push(res);
+                i++;
+                //若全部执行
+                if(i===result.length){
+                    //执行then回调
+                    resolve(result)
+                }else{
+                    //继续迭代
+                    next()
+                }
+            },reject)
+        }
+    })
+}
 
 
 
+```
+
+
+## 81 状态机? 有限状态机???
+
+### 81.1 状态机
+
+世界上导初都是状态机, 你可以到处看到他们, 但也许并没有想过他们时这样的
+
+最流行和最常见的例子就是**交通灯**
+
+在任何时间点上,交通信号等都有一个确定的状态,通常情况下,它要么
+- 绿灯亮起,其他两个灯关闭
+- 红灯亮起,其他两个灯熄灭
+- 黄灯亮起,其他两个灯熄灭
+
+(有些信号灯略不同,但为了这个例子,我们并不关心)
+
+在状态机的术语中,灯的开启或关闭被称为**输出**
+
+这3中情况中每一种都被称为**状态**,当交通信号灯收到一个输入时,它将改变状态,通常只是一个固定的计时器,
+它绝对了交通灯应该在多长时间内是绿色,黄色和红色
+
+在这种情况下,定时器就是系统的**输入**, 有些信号机有一个按钮,行人可以按下, 使红色显示为汽车,这将是另一个输入
+
+在状态机中,状态只有在响应输入时才能改变(我们一个**过渡**)
+
+### 81.2 有限状态机
+
+我们的交通灯状态机被说成是**有限的**,因为我们有有限数量的状态
+
+有些系统可能有无限多的状态
+
+比如世界生态系统模型,或者昆虫的生命,我们不能用有限的状态数来定义它;
+
+但是交通灯呢? 那是一个见到那的东西,它有3个状态,
 
 
 
