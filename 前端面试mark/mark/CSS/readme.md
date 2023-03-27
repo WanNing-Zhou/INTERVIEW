@@ -1186,9 +1186,69 @@ clip-path可以为沿路放置的每个点定义坐标,就定义了三个点 `to
 ```
 
 [三角形](https://zhuanlan.zhihu.com/p/482361933)
-### <h2 id="21"></h2>
-### <h2 id="21"></h2>
-### <h2 id="21"></h2>
+### <h2 id="24">24. rem 适配方法如何计算HTML跟字号以及适配方案?</h2>
+
+**通用方案**
+1、设置根 font-size：625%（或其它自定的值，但换算规则 1rem 不能小于 12px）
+2、通过媒体查询分别设置每个屏幕的根 font-size
+3、CSS 直接除以 2 再除以 100 即可换算为 rem
+优：有一定适用性，换算也较为简单
+劣：有兼容性的坑，对不同手机适配不是非常精准；需要设置多个媒体查询来适应不同
+手机，单某款手机尺寸不在设置范围之内，会导致无法适配
+**网易方案**
+1、拿到设计稿除以 100，得到宽度 rem 值
+2、通过给 html 的 style 设置 font-size，把 1 里面得到的宽度 rem 值代入
+x document.documentElement.style.fontSize =
+document.documentElement.clientWidth / x + ‘px‘;
+3、设计稿 px/100 即可换算为 rem
+优：通过动态根 font-size 来做适配，基本无兼容性问题，适配较为精准，换算简便
+劣：无 viewport 缩放，且针对 iPhone 的 Retina 屏没有做适配，导致对一些手机的适
+配不是很到位
+**手淘方案**
+1、拿到设计稿除以 10，得到 font-size 基准值
+2、引入 flexible
+3、不要设置 meta 的 viewport 缩放值
+4、设计稿 px/ font-size 基准值，即可换算为 rem
+优：通过动态根 font-size、viewpor、dpr 来做适配，无兼容性问题，适配精准。
+劣：需要根据设计稿进行基
+
+### <h2 id="25">25. CSS 中 link 和@import 的区别？（必会</h2>
+
+**适用范围不同**
+
+@import 可以在网页页面中使用，也可以在 CSS 文件中使用，用来将多
+个 CSS 文件引入到一个 CSS 文件中；而 link 只能将 CSS 文件引入到网页页面中
+
+**功能范围不同**
+
+link 属于 XHTML 标签，而@import 是 CSS 提供的一种方式，link 标签除
+了可以加载 CSS 外，还可以定义 RSS，定义 rel 连接属性等，@import 就只能加载 CSS
+
+**加载顺序不同**
+
+当一个页面被加载的时候，link 引用的 CSS 会同时被加载，而@import
+引用的 CSS 会等到页面全部被下载完再被加载。所以有时候浏览@import 加载 CSS 的页
+面时开始会没有样式（就是闪烁），网速慢的时候还挺明显
+
+**兼容性**
+
+由于@import 是 css2.1 提出的，所以老的浏览器不支持，@import 只有在 IE5
+以上的才能识别，而 link 标签无此问题
+
+**控制样式时的差别**
+
+使用 link 方式可以让用户切换 CSS 样式.现代浏览器如
+Firefox,Opera,Safari 都支持 rel=”alternate stylesheet”属性(即可在浏览器上选择不同 的风格),
+当然你还可以使用 Javascript 使得 IE 也支持用户更换样
+
+### <h2 id="21">请指出JavaScript宿主对象和原生对象的区别</h2>
+
+原生对象: 
+
+ECMA-262 把本地对象(native object)定义为"独立于宿主环境的ECMAScript实现提供的对象"  
+"本地对象"包含哪些内容: Object
+
+
 ### <h2 id="21"></h2>
 ### <h2 id="21"></h2>
 
