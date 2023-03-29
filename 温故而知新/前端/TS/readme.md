@@ -611,11 +611,194 @@ class Person{
     }
     
     //存取器
-    set fullName(){
-        
+    set fullName(val){
+        let name = val.split('_')
+        this.firstName = name[0]
+        this.lastName = name[1]
     }
 }
+const person = new Person()
+person.fullName = '诸葛孔明'
+console.log(person.fullName)
 ```
+
+#### 静态属性
+
+// 静态成员: 在类中通过static修饰的属性或者方法,那么就是静态的属性及静态的方法,  
+// 也成之为静态成员
+
+```ts
+class Person{
+    name: string
+    static age:number = 10
+    //构造安徽拿书是不能通过static来进行修饰的
+    constructor(name) {
+        this.name = name
+    }
+    static sayHi(){
+        console.log('sawadika')
+    }
+}
+
+const person = new Person('xiaott')
+console.log(Person.age)
+// console.log(person.age)
+Person.say
+```
+
+
+#### 抽象类
+
+抽象类作为其他派生类的基类使用,他们不能被实例化,不同于接口,抽象类可以包含成员的实现细节  
+`abstract`关键字是用于定义抽象类的关键字
+
+```ts
+//抽象类: 包含抽象方法(抽象方法一般没有任何的具体内容的实现,)也可以包含实例方法
+//抽象类是不能被实例化的,为了让字类进行实例化以及实现
+abstract class Animal {
+    abstract eat()
+    
+    run(){
+        console.log('润了')
+    }
+}
+
+class Cat extends Animal{
+    eat(){
+        console.log('buchi')
+    }
+}
+
+const cat:Animal = new Cat();
+
+```
+
+### 函数
+//函数: 封装了一些重复的操作
+```ts
+function add(x:string,y:string):string{
+    return x + y
+}
+
+// 函数的完整的写法
+// add3 ==> 变量名 ==> 函数add3
+// (x: number, y: number)=> number 当前这个函数的类型
+// function(x: number, y: number): number{return x + y} 就相当于符合上面的这个函数类型的值
+const add3: (x: number, y:number)=> number = function (x:number, y:number){
+    return x + y
+}
+
+```
+
+#### 可选参数和默认参数
+
+// 可选参数:函数在声明的时候,内部的参数的时候使用 ? 进行修饰,那么就表示该参数可以传入也可以不用传入,叫可选参数    
+// 默认参数: 函数在声明的时候,内部测参数有自己的默认值,此时的这个参数就可以叫默认参数
+
+```ts
+//定义一个还能输: 传入姓氏和名字,可以得到姓名(姓氏+名字=姓名)
+
+const getFullName = function (firName:string='东方', lastName?: string):string{
+    //判断名字是否传入
+    if(lastName){
+        return firName + '_' + lastName;
+    }else{
+        return firName
+    }
+}
+
+console.log(getFullName());
+
+```
+
+#### 剩余参数
+
+
+```ts
+// ...args:string[] ---> 剩余参数,放在了一个字符串的数组中, args里面
+function showMsg(str,...args: string[]){
+    console.log(str) //a
+    console.log(args) // b, c 
+}
+
+showMsg('a','b','c')
+```
+#### 函数重载
+
+// 函数重载: 函数名字相同, 函数的参数及个数不同
+
+```ts
+//函数重载声明
+
+function add(x:string,y:string):string
+function add(x:number, y:number):number
+
+function add(x:string|number, y:string|number): string|number{
+    if (typeof x === 'string' && typeof y === 'string'){
+        return x + y //字符串拼接
+    }else if (typeof x === 'number' && typeof y === 'number'){
+        return x + y // 数字相加
+    }
+    
+}
+```
+### 泛型
+
+泛型: 在定义函数,接口,类的时候不能预先去顶要使用的数据类型,
+而是在使用函数,接口,类的时候才能确定数据的类型
+
+```ts
+
+function getArr<T>(num:T, count:number):T[]{
+    //根据数据和数量产生一个数组
+    const arr : T[] = []
+    for (let i=0;i<count;i++){
+        arr.push(num);
+        return arr
+    }
+}
+
+console.log(getArr<number>(100,12)[0].toFixed(2))
+console.log(getArr<string>('卡,卡西',12)[1].split(','))
+
+```
+
+#### 多个泛型参数的函数
+
+多个泛型参数的函数: 函数中有多个泛型的参数
+
+```ts
+function getMas<K,V>(value: K, value2: V):[K,V]{
+    return [value, value2]
+}
+
+console.log(getMas(['卡卡',123]))
+```
+
+
+#### 声明文件
+
+当使用第三方库时,我们需要引用它的声明文件,才能获取对应的代码补全,接口提示等功能
+
+比如jQuery
+```ts
+import JQuery from 'jquery'
+declare var jQuery:(selector: string)=>any
+```
+一般会写到一个文件中, 如'jQuery.d.ts'
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
