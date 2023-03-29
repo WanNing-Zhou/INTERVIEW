@@ -352,6 +352,65 @@ const updateUser = ()=>{
 </script>
 
 ```
+### setup在beforeCreate生命周期回调之前执行,而且就执行一次
+
+**setup细节问题:**  
+
+- setup执行的时机
+
+setup是在beforeCreate生命周期回调之前就执行了,而且就执行一次  
+数据初始化的生命周期回调  
+由此可以推断出:setup在执行的时候,档期那的组件还没有创建出来,也就意味着,组件实例对象this根本就不能用  
+this是undefined,说明,就不能通过this再去调用data/computed/methods/props中的相关内容  
+其实所有的composition API(组合式API)相关回调函数中也都不可以  
+
+- setup的返回值
+
+set中的返回值是一个对象,内部的属性和方法是给html模板使用的  
+返回对象中的属性会与data函数返回对象的属性合并成为组件对象的属性,都可以在html模板中使用  
+在Vue3中尽量不要使用data和setup及methods和setup(不要混合使用):methods可以访问setup体哦那个的属性和方法,但在setup方法中不能访问data和methods(因为他比data先执行)    
+setup不能是一个async函数:因为返回值不再是return的对象,而是promise,模板看不到return对象中的属性数据
+
+
+- setup的参数  
+setup(props,context)/setup(props,)
+
+```js
+import {defineComponent} from 'vue'
+export default defineComponent({
+    name:'Child',
+    props:['msg'],//接收父组件传递过来的参数
+    beforeCreate(){
+        console.log('beforeCreate执行了')
+    },
+    //界面渲染完毕,
+    mounted(){
+        console.log(this) //这里的this是一个代理对象
+    },
+    setup(){
+        console.log('setup执行了',this)//这里的this为undefined
+        
+        const showMsg1 = ()=>{
+            console.log('setup中的showMsg1方法')
+        }
+        return {
+            showMsg1,
+            //setup中一般返回一个对象,对象中的属性和方法搜可以在html模板直接使用
+        }
+    },
+    data(){
+        count:10
+    },
+    methods:{
+        showMsg(){
+            console.log('methods中的showMsg方法')
+        }
+    }
+})
+```
+
+
+
 
 ## 4. Vue2的生命周期和Vue3的生命周期
 
@@ -362,4 +421,5 @@ Vue3的生命周期
 ![img_2.png](img_2.png)
 
 ![img_3.png](img_3.png)
+
 
