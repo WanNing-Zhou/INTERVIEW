@@ -373,7 +373,12 @@ setup不能是一个async函数:因为返回值不再是return的对象,而是pr
 
 
 - setup的参数  
-setup(props,context)/setup(props,)
+setup(props,context)/setup(props,{attrs,slots,emit})  
+  props:包含props配置生命且传入了所有属性的对象
+  attrs: 包含没有在props配置中声明的属性的对象,相当于this.$attrs  
+  slots:包含所有传入的插槽内容的对象,相当于this.$slots  
+  emit: 用啊来分发自定义事件的函数,相当于this.$emit
+  
 
 ```js
 import {defineComponent} from 'vue'
@@ -387,7 +392,14 @@ export default defineComponent({
     mounted(){
         console.log(this) //这里的this是一个代理对象
     },
-    setup(){
+    setup(props,context){
+        //props参数,是一个对象,里面有父级组件向子级组件传递的数据,
+        // 并且是在子级组件中使用props接受到所有的属性
+        // 不包含props配置声明且传入了所有属性的对象
+        console.log(props)
+        //context参数,是一个对象,里面有attrs对象(获取当前组件标签上所有的属性,但是该属性是在props没有声明接受的所有),emit方法(分发事件的),slots对象(插槽)
+        console.log(context.attrs)
+        console.log(context.emit)
         console.log('setup执行了',this)//这里的this为undefined
         
         const showMsg1 = ()=>{
@@ -409,8 +421,52 @@ export default defineComponent({
 })
 ```
 
+### reactive 和 ref 的细节问题
 
+- reactive 与 ref 是Vue3的composition中2各最重要的响应式API
+- ref用来处理基本数据类型,reactive用来处理对象(递归深度响应式)
+- 如果用ref对象/数组,内部会自动将对象/数组转换成reactive代理对象
+- ref内部:通过给value属性添加getter/setter来实现对数据的劫持
+- reactive内部: 通过使用Proxy来实现对象内部所有数据的劫持,并通过Reflect操作对象内部数据
+- ref是的数据操作: 子啊js中要.value.在模板中不需要(内部解析模板是会自动添加.value)
 
+```ts
+  import {defineComponent,ref,reactive} from "vue";
+  export default defineComponent({
+    name:'App',
+    setup(){
+      //通过ref的方式设置的数据
+      const m1 = ref('abc')
+      const m2 = reactive({
+        name:'小明',
+        wife:{
+          name:'小红',
+          age:'34'
+        }
+      })
+      //r
+      const m3 = ref({
+        name:'小明',
+        wife:{
+          name:'小红',
+          age:'34'
+        }
+      })
+      const update=()=>{
+        m1.value += '==='
+        m2.wife.name +='1'
+        m3.value.name += '==='
+        m3.value.wife.name += 'k'
+      }
+      return{
+        m1,m2,m3,update
+      }
+
+    }
+  })
+```
+
+## 计算属性与建是
 
 ## 4. Vue2的生命周期和Vue3的生命周期
 
