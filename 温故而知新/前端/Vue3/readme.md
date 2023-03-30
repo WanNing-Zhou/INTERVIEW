@@ -466,7 +466,26 @@ export default defineComponent({
   })
 ```
 
-## 计算属性与建是
+
+## 计算属性与监视
+
+- compute函数
+  - 与computed配置功能一致
+  - 只有getter
+  - 有getter和setter
+  
+- watch函数
+  - 与watch配置功能一致
+  - 监视指定的一个或多个响应式数据, 一旦数据变化,就自动执行监视回调
+  - 默认初始时不执行回调,但可以通过immediate为true,来指定初始时立即执行第一次
+  - 通过deep为true,来指定深度监视
+  
+- watchEffect函数
+  - 不用直接指定要监视的数据,回调函数中是哟个的哪些响应式数据就监视哪些响应式数据
+  - 某人初始时会执行第一次,从而可以手机需要监视的数据
+  - 监视数据发生时回调
+  
+
 
 ## 4. Vue2的生命周期和Vue3的生命周期
 
@@ -474,8 +493,321 @@ Vue2的生命周期钩子
 ![img_1.png](img_1.png)
 
 Vue3的生命周期  
-![img_2.png](img_2.png)
+![img_4.png](img_4.png)
 
 ![img_3.png](img_3.png)
 
+不同之处: 
 
+vue2的生命周期到vue3中仍然可以使用,  
+
+vue中的生命周期函数 过渡到 Vue3 都变成`onXXX`  
+vue3去掉了vue2中的`beforeCreate和created`新增了`setup`  
+vue3中使用生命周期都是使用组合API的形式去使用  
+而vue2中是对象中函数的方式去使用  
+
+vue2中的`destory`和`beforeDestory`在vue3中更名为`unMounted`和`beforeUnmounte`  
+
+vue3中`setup`取代的是`beforeCreate`和`Created`
+
+vue2和vue3生命周期同时使用的时候, vue3会比vue2早执行
+
+## 自定义Hook函数
+
+## toRefs
+
+toRefs可以把一个响应式对象转换成为普通对象  
+该属性对象的属性都是ref
+
+应用:当从合成函数返回响应式对象时,toRefs非常有用,这样消费组件就可以在不丢失响应式的情况下对然会的对象进行分解使用
+
+
+问题: reactive对象取出的所有属性值都是非响应式的  
+解决: 利用`toRefs`可以将一个响应式的`reactive`对象的所有原始属性转换为响应式的`ref`属性
+```html
+<template>
+  <h2>toRefs的使用</h2>
+  <h3>name:{{name}}</h3>
+  <h3>age:{{age}}</h3>
+</template>
+<script lang="ts">
+
+import {defineComponent, reactive,toRefs} from "vue";
+
+export default defineComponent({
+  name:'App',
+  setup(){
+    const state = reactive({
+      name:'自来也',
+      age:47
+    })
+
+    //toRefs可以把一个响应式对象转换成为普通对象
+    // 该普通对象的每个属性都是ref
+    // const state2 = toRefs(state)
+    const {name,age} = toRefs(state)
+
+    setInterval(()=>{
+      // state2.age.value ++
+      age.value++
+      console.log('玛瑞奥')
+    },2000)
+    return{
+      // ...state2 //不是响应式的数据了 ---> {name:'自来也',age:'47'}
+      name,
+      age
+    }
+  }
+})
+
+</script>
+
+```
+
+## ref获取元素
+
+利用ref函数获取组件中的标签元素  
+功能需求:让输入框自动获取焦点  
+```html
+<template>
+  <h2>ref的另一个作用</h2>
+  <input type="text" ref="inputRef">
+</template>
+<script lang="ts">
+import {defineComponent, onMounted, ref} from "vue";
+
+export default defineComponent({
+  name: 'App',
+  setup(){
+    //默认是空的,页面加载完毕,说明组件已经存在,获取文本框元素
+    const  inputRef = ref<HTMLElement | null>(null)
+
+    onMounted(()=>{
+      inputRef.value && inputRef.value.focus()
+    })
+
+    return {
+      inputRef
+    }
+  }
+
+
+
+})
+
+</script>
+```
+
+## Composition API (其他部分)
+
+### shallowRef 和 shallowReactive
+
+shallowRef 和 shallowReactive 只是做了浅的劫持,对象里面的参数并没有使用proxy进行代理
+
+一般情况下使用ref 和 reactive 就能解决大部分情况  
+
+如果有一个对象结构比较深,但变化是只是外层数据变化 ===> shallowReactive  
+如果有一个对象数据,后面会产生新的对象来替换 ===> shallowRef
+
+```html
+<template>
+  <h2>shallowRef和shallowReactive的使用 </h2>
+  <div>{{m1}}</div>
+  <div>{{m2}}</div>
+  <div>{{m3}}</div>
+  <div>{{m4}}</div>
+  <hr>
+  <button @click="update">更新数据</button>
+</template>
+<script lang="ts">
+import {defineComponent, reactive, shallowReactive, shallowRef,ref} from "vue";
+
+export default defineComponent({
+  name:'App',
+  setup(){
+    //深度劫持(深监视) --- 深度响应式
+    const m1 = reactive({
+      name:'名人',
+      age:20,
+      car:{
+        name:'本',
+        color:'red'
+      }
+    })
+    // 浅劫持(浅监视) --- 浅响应式
+    const m2 = shallowReactive({
+      name:'名人',
+      age:20,
+      car:{
+        name:'本',
+        color:'red'
+      }
+    })
+    //深劫持 --- 做了reactive的处理
+    const m3 = ref({      name:'名人',
+      age:20,
+      car:{
+        name:'本',
+        color:'red'
+      }})
+    //浅劫持 --- 没有做代理
+    const m4 = shallowRef({      name:'名人',
+      age:20,
+      car:{
+        name:'本',
+        color:'red'
+      }})
+    const update = ()=>{
+      // 更改m1的数据
+      // m1.name += '+++'
+      // m1.car.name += '=='
+      // 更改m2的数据
+      // m2.name += '+++'
+      // m2.car.name += '=='
+      // 更改m3的数据
+      // m3.value.car.name += '--'
+      // 更改m4的数据
+      m4.value.car.name += '***'
+    }
+    return {
+      m1,
+      m2,
+      m3,
+      m4,
+      update
+    }
+  }
+})
+
+
+
+</script>
+```
+
+
+### readonly  和 shallowReadonly
+
+readonly 是深度只读数据,获取一个对象(响应式对象或纯对象)或ref(并返回原始代理的只读代理)  
+只读代理是深层的: 访问任何嵌套 property 也是只读的
+
+shallowReadonly  浅只读数据  
+创建一个代理,使其自身的property为只读,但不执行任何嵌套对象的深度只读转换
+
+应用场景  
+在某些特定情况下,我们可能不希望对数据进行更新操作,那就可以包装生成一个只读的对象来读取数据,而不能修改或删除
+```html
+<template>
+
+  <h2>readonly 和 shallowReadonly</h2>
+  <h3>state:{{state2}}</h3>
+  <hr>
+  <button @click="update">更新数据</button>
+
+</template>
+<script lang="ts">
+import {defineComponent, reactive,readonly,shallowReadonly} from "vue";
+
+export default defineComponent({
+  name: 'App',
+  setup(){
+
+    const state = reactive({
+      name:'佐助',
+      age:20,
+      car:{
+        name:'bem',
+        color:'red'
+      }
+    })
+
+    //只读的数据 -- 深度的只读
+    // const state2 = readonly(state)
+
+    //只读的只读  -- 浅只读
+    const state2 = shallowReadonly(state)
+    const update = ()=>{
+        // state2.name = 'kakaxi';
+
+        state2.car.name = 'kakaxi';
+    }
+    return {
+      state2,
+      update
+    }
+  }
+})
+
+
+</script>
+```
+
+### toRaw 与 markRaw 
+
+- toRaw 
+  - 返回有`reactive`或`readonly`方法转换成响应式代理的普通对象
+  - 这是一个还原方法,可以用于临时读取,访问不会被代理/跟踪,写入时也不会触发界面更新
+  
+- markRaw
+  - 标记一个对象,使其永远不会转换为代理对象,返回对象本身
+  - 应用场景:
+    - 有些值不应该设置为响应式的,, 例如复杂的第三方类实例或Vue组件对象
+    - 当渲染具有不可变数据的大列表时,跳过代理转换可以提高性能
+  
+
+```html
+<template>
+
+  <h2>toRaw 和 markRaw </h2>
+  <h3>state:{{state}}</h3>
+  <hr>
+  <button @click="testToRaw">测试toRaw</button>
+  <button @click="testMarkRaw">测试markRaw</button>
+</template>
+<script lang="ts">
+import {defineComponent,toRaw,markRaw, reactive} from "vue";
+import ts from "typescript/lib/tsserverlibrary";
+import LogLevel = ts.server.LogLevel;
+
+export default defineComponent({
+  name: 'App',
+  setup(){
+    const state = reactive({
+      name:'佐助',
+      age:20,
+      car:{
+        name:'bem',
+        color:'red'
+      }
+    })
+
+    const testToRaw = ()=>{
+      //把代理对象变成普通对象
+      const user = toRaw(state)
+      user.name += '=='
+      // state.age = 32
+      console.log('nihao')
+    }
+
+    const testMarkRaw = ()=>{
+      console.log('buhao')
+      const likes = ['不想学了', '回家']
+      state.likes = markRaw(likes)
+      setInterval(
+          ()=>{
+            state.likes[0] += '1'
+            console.log(state.car)
+          },1000
+      )
+    }
+
+    return {
+      state,
+      testToRaw,
+      testMarkRaw
+    }
+  }
+})
+
+
+</script>
+```
