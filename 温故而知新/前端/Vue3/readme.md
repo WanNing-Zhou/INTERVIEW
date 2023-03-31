@@ -811,3 +811,157 @@ export default defineComponent({
 
 </script>
 ```
+
+### toRef的使用及特点
+
+toRef()  
+基于响应式对象的一个属性,创建一个对应的ref,这样创建的ref与其源属性保持同步:改变源属性的值将更新ref的值,
+反之亦然
+```html
+<script setup>
+import { toRef } from 'vue'
+
+const props = defineProps(/* ... */)
+
+// 将 `props.foo` 转换为 ref，然后传入
+// 一个组合式函数
+useSomeFeature(toRef(props, 'foo'))
+</script>
+
+```
+
+```html
+<template>
+  <h2>toRef的使用及特点</h2>
+  <h3>{{age}}</h3>
+  <h3>{{money}}</h3>
+  <button @click="update">更新数据</button>
+</template>
+<script lang="ts">
+import {defineComponent,reactive,toRef,ref} from "vue";
+
+export default defineComponent({
+  name:'App',
+  setup(){
+    const state = reactive({
+      name:'佐助',
+      age: 45,
+      money:100
+    })
+
+    //把响应式的state对象中的某个属性age变成了ref对象了
+    const age = toRef(state,'age')
+    // 把响应式对象的某个属性使用ref进行包装
+    const money = ref(state.money)
+
+    const update = ()=>{
+      //更新数据的
+      // state.age += 2;
+      // age.value += 2;
+      // money.value += 10
+    }
+    return {
+      state,
+      age,
+      money,
+      update
+    }
+
+  }
+})
+
+
+</script>
+<style scoped>
+</style>
+```
+
+
+当 toRef 与组件 props 结合使用时，关于禁止对 props 做出更改的限制依然有效。
+尝试将新的值传递给 ref 等效于尝试直接更改 props，这是不允许的。
+在这种场景下，你可能可以考虑使用带有 get 和 set 的 computed 替代
+
+
+toRef  和 toRefs 和 ref的区别  
+
+ref():接受一个内部值，返回一个响应式的、可更改的 ref 对象，此对象只有一个指向其内部值的属性 `.value`。
+这个API相当于把源数据复制一份,对源数据操作不会产生影响
+
+toRef(): 接受两个值, 一个是对象的值,另一个是需要做响应式的属性,如 `const ak = toRef(prop, key)`,
+当对源数据操作会对`ak`产生影响, 反之亦然
+
+roRefs(): 将一个响应式对象转换为一个普通对象，这个普通对象的每个属性都是指向源对象相应属性的 ref。每个单独的 ref 都是使用 `toRef()` 创建的。
+
+### customRef (用户自定义的ref)
+
+`customRef` 创建一个自定义的ref,显示声明对其依赖追踪和更新触发的控制方式
+
+类型:
+```ts
+function customRef<T>(factory: CustomRefFactory<T>): Ref<T>
+
+type CustomRefFactory<T> = (
+  track: () => void, // 追踪数据变化
+  trigger: () => void // 通知Vue去重新解析模板
+) => {
+  get: () => T
+  set: (value: T) => void
+}
+```
+`customRef()`预期接收一个工厂函数作为参数,这个工厂函数接受`track`和`trigger`两个参数作为参数,并返回一个带有`get`和`set`方法的对象
+
+一般来说，track() 应该在 get() 方法中调用，而 trigger() 应该在 set() 中调用。然而事实上，你对何时调用、是否应该调用他们有完全的控制权。
+
+
+### provide 与 inject
+
+- provide 和 inject 提供依赖注入,功能类似于 2.x的provide/inject
+- 实现跨层级组件(祖孙)间通信
+
+```ts 
+//祖宗组件
+
+import {defineComponent, provide, ref} from "vue";
+import Son from "./components/Son.vue";
+export default defineComponent({
+  name: 'App',
+  components:{
+    Son
+  },
+  setup() {
+    //响应式的树
+    const color = ref('red')
+    //提供数据
+    provide('color',color)
+    return {
+      color
+    }
+  }
+
+})
+
+```
+
+```ts
+//孙子组件, 接受数据
+import {defineComponent, inject} from "vue";
+
+export default defineComponent({
+  name:'GrandSon',
+  setup(){
+    //注入数据
+    const color = inject('color')
+
+    return {
+      color
+    }
+  }
+})
+```
+
+### 响应式数据判断
+
+- `isRef`: 检查一个值是否是一个ref对象
+- `isReactive`: 检查一个对象是否由`reactive`创建的响应式代理
+- `isReadonly`: 检查一个对象是否由`readonly`创间的只读代理
+- `isProxy`: 检查一个对象是否由`reactive`或者`readonly`方法创建的代理
