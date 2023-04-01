@@ -965,3 +965,21 @@ export default defineComponent({
 - `isReactive`: 检查一个对象是否由`reactive`创建的响应式代理
 - `isReadonly`: 检查一个对象是否由`readonly`创间的只读代理
 - `isProxy`: 检查一个对象是否由`reactive`或者`readonly`方法创建的代理
+
+## 新的组件
+
+### Fragment
+
+在Vue2中：组件必须有一个根标签  
+在Vue3中，组件可以没有根标签，颞部会将多个标签包含在一个Fragment虚拟元素中  
+好处：减少标签层级，减少内存占用
+```html
+<template>
+  <div></div>
+  <div></div>
+</template>
+```
+
+### Teleport(瞬移)
+
+- Teleport提供了一种干净的方法，让组件的html在父组件界面外的特定标签（可能是body）下插入显示
