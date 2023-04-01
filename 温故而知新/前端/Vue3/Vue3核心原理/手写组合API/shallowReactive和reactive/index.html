@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script src="index.js"></script>
+<script>
+
+    //浅代理
+    const proxyUser1 = shallowReactive({
+        name:'小明',
+        car:{
+            color:'red'
+        }
+    })
+
+    // proxyUser1.name = '小红' //拦截到了写的数据
+
+    // proxyUser1.name += '==' //拦截到读写的操作
+
+    // proxyUser1.car.color += '==' //拦截到读取数据,没有拦截到写入的数据
+
+    // delete proxyUser1.name; //拦截到了删除数据
+
+    // delete proxyUser1.car.color ; //拦截到了读数据，没有拦截到删除
+
+
+
+    //深代理
+    const proxyUser2 = reactive({
+        name:'小明',
+        car:{
+            color:'red'
+        }
+    })
+
+
+    // proxyUser2.name = '小红' //拦截到了写的数据
+
+    // proxyUser2.name += '==' //拦截到读写的操作
+
+    // proxyUser2.car.color += '==' //拦截到读取数据,拦截到写入数据
+
+    // delete proxyUser2.name; //拦截到了删除数据
+
+    // delete proxyUser2.car.color ; //拦截到了读数据，拦截到删除
+
+
+
+    //测试shallowReadonly 和 readonly
+    // const proxyUser3 = shallowReadonly({
+    //     name:'小明',
+    //     car:['奔驰','宝马']
+    // })
+    // console.log(proxyUser3.name) //拦截到读取
+    // proxyUser3.name = 'kakaxi' //拦截到修改并警告
+    // proxyUser3.car[1] = '保时捷' //拦击到读取
+    // delete proxyUser3.name; //拦截到删除
+    // delete proxyUser3.car[2] //拦击到读,没有拦截到删除
+
+
+    const proxyUser4 = readonly({
+        name:'小明',
+        car:['奔驰','宝马']
+    })
+    // console.log(proxyUser4.name) //拦截到读取
+    // proxyUser4.name = 'kakaxi' //拦截到修改并警告
+    // proxyUser4.car[1] = '保时捷' //拦击到读取 拦截到修改并警告
+    // delete proxyUser4.name; //拦截到删除
+    // delete proxyUser4.car[2] //拦击到读,拦截到删除
+
+
+    const ref1 = shallowRef({
+        name:'小明',
+        car:{
+            color:'red'
+        }
+    })
+
+    // console.log(ref1.value)
+    // ref1.value = '==' //可以劫持到
+    // console.log(ref1.value.car='111') //劫持不到
+
+
+
+</script>
+</body>
+</html>
