@@ -1,11 +1,11 @@
 <template>
   <h2>App父级组件Suspense</h2>
   <Suspense>
-    <template>
+    <template #default>
 <!--异步组件  -->
       <AsyncCom></AsyncCom>
     </template>
-    <template>
+    <template v-slot:fallback>
 <!--   loading的内容   -->
     </template>
 
