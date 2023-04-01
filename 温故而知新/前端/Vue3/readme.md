@@ -983,3 +983,41 @@ export default defineComponent({
 ### Teleport(瞬移)
 
 - Teleport提供了一种干净的方法，让组件的html在父组件界面外的特定标签（可能是body）下插入显示
+````html
+<template>
+  <button @click=" modalOpen = true ">
+    打开一个对话框
+  </button>
+
+<!--  对话框代码-->
+  <Teleport to="body">
+    <div v-if="modalOpen">
+      <div>这是对话框</div>
+      <button @click="modalOpen = false">关闭对话框</button>
+    </div>
+  </Teleport>
+
+
+</template>
+<script lang="ts">
+  import {defineComponent,ref} from "vue";
+  export default defineComponent({
+    name:'ModalButton',
+    setup(){
+      const modalOpen = ref(false)
+
+      return {
+        modalOpen
+      }
+    }
+  })
+</script>
+<style scoped lang=less>
+
+</style>
+````
+
+
+### Suspense(不确定的)
+
+- 它允许我们的应用程序在等待异步组件时渲染一些后备内容,可以让我们创建一个平滑的用户提亚 

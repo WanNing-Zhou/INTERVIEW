@@ -1,15 +1,32 @@
 <template>
-  <div>父级组件</div>
-  <ModalButton></ModalButton>
-</template>
+  <h2>App父级组件Suspense</h2>
+  <Suspense>
+    <template>
+<!--异步组件  -->
+      <AsyncCom></AsyncCom>
+    </template>
+    <template>
+<!--   loading的内容   -->
+    </template>
 
+  </Suspense>
+
+</template>
 <script lang="ts">
-import {defineComponent} from "vue";
-import ModalButton from './components/ModalButton.vue'
+
+import {defineComponent,defineAsyncComponent} from "vue";
+// const AsyncCom = ()=>import('./components/AsyncCom')
+
+//Vue3中动态引入组件的写法
+const  AsyncCom = defineAsyncComponent(()=>import('./components/ModalButton'))
+// import AsyncCom from "./components/AsyncCom.vue";
 export default defineComponent({
-  name:'APP',
+  name:'App',
   components:{
-    ModalButton
+    AsyncCom
   }
+  //vu2中动态引入组件的写法
 })
 </script>
+<style scoped>
+</style>
