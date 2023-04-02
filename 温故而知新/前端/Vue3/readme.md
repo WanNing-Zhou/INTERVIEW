@@ -1021,3 +1021,24 @@ export default defineComponent({
 ### Suspense(不确定的)
 
 - 它允许我们的应用程序在等待异步组件时渲染一些后备内容,可以让我们创建一个平滑的用户提亚 
+
+Vue2和Vue的比较而言的相关的面试题
+
+Vue3支持大多数Vue2的特性  
+Vue中设计了一套强大的组合API代替了Vue中的option API, 复用性更强  
+更好的支持TS  
+最主要:  
+Vue3中使用了Proxy配置Reflect代替了Vue2中Object.defineProperty()方法实现了数据的响应式(数据代理)   
+
+重写了虚拟DOM,速度更快了  
+新的组件: Fragment(片段) / Teleport(瞬移) / Suspense(不确定)  
+设计了一个新的脚手架工具: Vite  
+
+
+OptionApi问题: 
+在传统的Vue OptionAPI中,新增或者修改一个需求,就需要分别在data,methods,computed里修改,滚动条反复上下移动  
+
+使用Compisition API  
+我们可以更加优雅的阻止我们的代码,函数,让相关功能的代码更加有序的组织在一起  
+
+![img_5.png](img_5.png)
