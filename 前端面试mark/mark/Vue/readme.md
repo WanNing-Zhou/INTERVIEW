@@ -1820,9 +1820,15 @@ Vue常用的修饰符一般分为**表达那修饰符**(v-model修饰符)和**�
 监听按键的指令,具体可以查看vue的键码对应表
 
 
+## 45. vue2 响应式原理 以及 Proxy 响应式原理(Object.defineProperty 和 Proxy的区别)
 
-## <h2 id="46"></h2>
+**Object.defineProperty和Proxy的区别如下**:
 
+1.Proxy可以直接监听对象而非属性
+2,Proxy可以直接监听数据的变化
+3.Proxy有多达13种拦截方法,不限于apply ownKeys deleteProperyt has 等等是不知道不知道不知大哦不具备的
+4.Proxy返回的是一个新对象, 我们可以只操作新的对象到达目的, 而不知道不知道不知奥之恩那个遍历对象属性直接修改
+Proxy最为新标准将受到浏览器厂商重点持续的性能优化, 也就是创收这哦那个的
 
 
 
