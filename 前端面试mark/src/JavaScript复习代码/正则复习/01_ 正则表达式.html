@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>正则表达式的使用</title>
+</head>
+<body>
+<script>
+    /*
+    * 正则表达式:
+    * - 正则表达式用于定义一些字符串的规则,
+    *      计算机可以根据正则表达式,检查一个字符串是否符合规则
+    *      获取字符串符合规则的那内容提取出来
+    *
+    * */
+
+    //创建正则表达式的对象
+    /**
+     * 语法:
+     * let 变量 = new RegExp("正则表达式","匹配模式")
+     * 使用type of检查正则对象,会返回object
+     * 在构造函数重可以传递一个匹配模式作为第二个参数
+     *  可以是
+     *      i 忽略大小写
+     *      g global全局匹配
+     *
+     */
+    // 可以检查一个字符串是否含有a
+    let reg = new RegExp("a");
+    let str = "a";
+
+    // 正则表达式的方法
+    /**
+     *  test()
+     *      - 使用这个方法可以检查一个字符串是否符合正则表达式的规则
+     *      如果符合规则返回true,否则返回false
+     *
+     *
+     */
+    let result = reg.test(str);
+    // console.log(reg.test("a"))
+
+
+    /**
+     * 使用字面量创建正则表达式
+     *  语法 let 变量 = /正则表达式/匹配模式
+     */
+
+    let reg0 = /a/g
+    // console.log(reg0.test("Ab")) //false
+    // console.log(reg0.test("Ba")) //true
+
+    //创建一个正则表达式,检查一个字符串中是否有a或b
+    /**
+     * 使用 | 表示或者的意思
+     * [] == a|b
+     */
+    let reg1 = /a | b/
+    let reg2 = /[ab]/
+    console.log(reg1.test("aC")) //ture
+
+    /**
+     * 创建一个正则表达式检查一个字符串是否有字母
+     * [a-z] 任意小写字母
+     * [A-Z] 任意大写字母
+     * [A-z] 任意字母
+     * [0-9] 任意数字
+     */
+
+    reg = /[A-z]/
+
+    /**
+     *  [^ ]除了
+     */
+    let reg3 = /[^ab]/
+    console.log(reg.test('kl')) //true
+    console.log(reg.test('abc'))//true
+
+
+
+</script>
+</body>
+</html>
