@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /**
+         * 量词
+         *  - 通过量词可以设置一个内容出现的次数
+         *  - 量词只对它前边的一个内容起作用
+         *  - {n} 正好出现n次
+         *  - {m,n}出现m-n次
+         *  - {m,} m次以上
+         *  - + 至少一个,相当于{1,}
+         *  - * 任意个 {0, }
+         *  - ? 0个或一个 {0,1}
+         *
+         * */
+        let reg = /a{3}/
+        let reg0 = /(ab){3}/
+        /**
+         * ^ 表示开头
+         * $ 表示结尾
+         */
+
+        let reg1 = /^a/
+        let reg2 = /a$/
+
+        console.log(reg.test('aaabc'))//true
+
+        /**
+         * . 表示任意字符
+         * 在正则表达式中使用 \ 作为专一字符
+         * \w  任意字母 , 数字 , _ (下划线)
+         * \W  除了字母 , 数字 , _
+         * \d   任意的数字[0-9]
+         * \D   除了数字[^0-9]
+         * \s   空格
+         * \S   除了空格
+         * \b   单词边界
+         * \B   除了单词边界
+         */
+        let reg3 = /\./
+
+        let reg4 = /\bchild\b/
+
+
+        //去除掉字符串中的空格
+        //去除空格就是使用""来替换空格
+        let reg5 = /^\s*|\s*$/g
+
+        console.log("   jsdk   ".replace(reg5,"").length)
+
+
+
+    </script>
+</body>
+</html>
