@@ -83,5 +83,13 @@ let removeSpaceCenter = function (str){
 }
 
 res = removeSpaceCenter(str)
-console.log(res)// 佐助
-console.log(res.length) //4
+// console.log(res)// 佐助
+// console.log(res.length) //4
+
+
+let removeSpaceCenter2 = function (str){
+    str = str.replace(/\s+/g,"")
+    return str;
+}
+
+console.log(removeSpaceCenter2("    4 5 6  4 5    "))
