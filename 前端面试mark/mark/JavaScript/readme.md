@@ -2125,6 +2125,8 @@ $(function (){
    而放入body中,则会按照页面从上倒下的加载顺序来运行javaScript的代码,
    所以我们可以把js外部引入的文件放到页面底部,来让js最后引入,从而加快页面的加载速度  
    
+![img_5.png](img_5.png)
+   
 ## 64. typeof 和 instanceof区别
 
 在javascript中,判断一个变量类型可以用  
@@ -2269,7 +2271,7 @@ JavaScript原型,每个对象都会在其内部初始化一个属性,就是proto
 这个prototype又会有自己的protype,于是就这样一直找下去,也就是我们平时所说的原型链概念  
 
 特点:  
-JavaScript对象时通过引用来传递的,我们创建的每个对象实体中国并没有一份属于自己的
+JavaScript对象时通过引用来传递的,我们创建的每个对象并没有一份属于自己的
 原型副本,当我们修改原型时,与之相关的对象会继承这一改变  
 
 
@@ -2672,7 +2674,7 @@ alert([...range]); // 1,2,3,4,5
 ```
 
 
-我们可以同故宫一个Generator作为`Symbol.iterator`,来使用generator进行迭代:
+我们可以通过一个Generator作为`Symbol.iterator`,来使用generator进行迭代:
 下面是一个相同的 range，但紧凑得多：
 ```js
 let range = {
