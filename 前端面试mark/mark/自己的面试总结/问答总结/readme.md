@@ -95,7 +95,7 @@ css语法:
 |inherit|从父元素继承该属性|
 
 **flex-grow**  
-`flex-grow`属性定义项目的放大比哦里,默认为为0 ,即如果存在剩余空间也不放大
+`flex-grow`属性定义项目的放大比例,默认为为0 ,即如果存在剩余空间也不放大
 
 如果所有项目的flex-grow属性都为1,则他们将等分剩余空间(如果有的话)
 
@@ -129,7 +129,7 @@ flex:initial等同于设置flex: 0 1 auto, 是flex属性的默认值
 
 **适用场景**  
 
-'initial'表示CSS属性的初始值,通常用来还原已经设置的CSS属性,因此日常开发不会专门色湖之`flex:initial`声明,
+'initial'表示CSS属性的初始值,通常用来还原已经设置的CSS属性,因此日常开发不会专门设置`flex:initial`声明,
 ,一般父节点设置`display:flex`,字节点不设置属性,则css默认表现为`flex:initial` 
 `flex:initial`声明适用于下图所示效果
 ![img.png](img.png)
@@ -206,7 +206,7 @@ flex:none 等同于设置 flex: 0 0 auto
 
 最后总结一下:
 
-- `flex:initial`表示默认的flex转台,无需设置,适合小控件元素的分布布局,或者某一项内容动态变化的布局
+- `flex:initial`表示默认的状态,无需设置,适合小控件元素的分布布局,或者某一项内容动态变化的布局
 
 - `flex:0`适用场景较少,适合设置在替换元素的父元素上,
 - `flex:none`适用于不换行的呢绒固定或者较少的小控件元素上,如按钮
