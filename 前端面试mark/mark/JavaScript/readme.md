@@ -173,7 +173,7 @@ sessionStorage是在同源的窗口中始终存在的数据, 只要这个浏览�
 
 localStorage和sessionStorage的存储数据大小一般都是5MB
 
-3. 存储位置  
+3. 存储位置
    localStorage和sessionStorage都保存在浏览器端,不与服务器进行交互通信  
    
 4. 存储内容类型  
@@ -1971,7 +1971,7 @@ innerHTML很多情况下都优于document.write其原因在于其允许更精确
 3. 渲染树不包括head和隐藏元素,大段文本的每一行都是独立节点,
     每一个节点都有对应的CSS属性  
 
-## 60. 获取页面中所有CheckBox怎么做? 
+## 60. 获取页面中所有CheckBox怎么做?  
 
 ```javascript
 var domList = document.getElementByTagName('input')  
@@ -2204,7 +2204,7 @@ setInterval(function () {
 
 3. 闭包: 一个可以访问外部(封装) 函数变量的内部函数  
 
-JavaScript开发的一个关键方面就是闭包,一个可以访问外部(封闭)函数变量的那日不函数;
+JavaScript开发的一个关键方面就是闭包,一个可以访问外部(封闭)函数变量的函数;
 由于JavaScript 运行时的实现细节,可以通过以下方式泄露内存:  
 
 ```javascript
@@ -2960,7 +2960,7 @@ cookie就是服务器记录用户状态的一种手段,cookie信息会保存用�
 2. 浏览器项web服务发送一个HTTP请求(TCP三次握手)
 3. 服务器301重定向向（从 HTTP://example.com 重定向到 HTTP://www.example.com）
 4. 浏览器跟踪重定向地址,请求另一个带www的网址
-5. 服务器处理请求(同故宫路由读取资源)
+5. 服务器处理请求(路由读取资源)
 6. 服务器返回一个HTTP响应(报头中把content-type设置为'text/html')
 7. 浏览器进DOM树结构
 8. 浏览器发送请求获取嵌在HTML中的资源
@@ -3049,7 +3049,7 @@ async和promise都是异步方法,区别使async生成的结果是promise对象,
 > 
 > async,await看器来更加简洁,使得异步代码看起来像同步代码,只有await代码执行完毕后才执行下面的代码,.于promise一样也是非阻塞的
 > 
-> async/await基于promise实现,相当于 Promise的升级半,不饿能用于普通的回调函数
+> async/await基于promise实现,相当于 Promise的升级半,不能用于普通的回调函数
 
 
 ### 100 mysql 和 mongoDB 由什么区别  
@@ -3088,6 +3088,7 @@ MongoDB是由C++语言编写的,主要是在为web应用提供可扩展的高性
 ### 101 为什么要模块化  
 
 有了更好的可维护性,可用性,在ES6推出后模块化在前端使用形式基本统一
+
 
 
 

@@ -126,8 +126,6 @@ vue-loader 是用于 webpack 的加载器，
 再通过 vue-template-compiler，style-loader 等插件，
 最终形成一个可以在浏览器中运行的 js 文件。
 
-
-
 答：vue文件的一个加载器，将template/js/style转换成js模块。  
 用途：js可以写es6、style样式可以scss或less、template可以加jade等  
 
@@ -738,9 +736,9 @@ vue-router配置路由，使用webpack的require.ensure技术，也可以实现�
 state => 基本数据(数据源存放地)  
 getters => 从基本数据派生出来的数据  
 mutations => 提交更改数据的方法，同步！  
-actions => 像一个装饰器，包裹mutations，使之可以异步。   
-modules => 模块化Vuex  
-
+actiones => 模块化Vuex  
+s => 像一个装饰器，包裹mutations，使之可以异步。   
+modul
 ## <h2 id="37">3.Vue.js中ajax请求代码应该写在组件的methods中还是vuex的actions中？</h2>
 
 答：   
@@ -1826,9 +1824,9 @@ Vue常用的修饰符一般分为**表达那修饰符**(v-model修饰符)和**�
 
 1.Proxy可以直接监听对象而非属性
 2,Proxy可以直接监听数据的变化
-3.Proxy有多达13种拦截方法,不限于apply ownKeys deleteProperyt has 等等是不知道不知道不知大哦不具备的
-4.Proxy返回的是一个新对象, 我们可以只操作新的对象到达目的, 而不知道不知道不知奥之恩那个遍历对象属性直接修改
-Proxy最为新标准将受到浏览器厂商重点持续的性能优化, 也就是创收这哦那个的
+3.Proxy有多达13种拦截方法,不限于apply ownKeys deleteProperyt has 等等obkect.defineProperty不具备的
+4.Proxy返回的是一个新对象, 我们可以只操作新的对象到达目的, 而不用遍历对象属性直接修改
+Proxy最为新标准将受到浏览器厂商重点持续的性能优化,
 
 
 
