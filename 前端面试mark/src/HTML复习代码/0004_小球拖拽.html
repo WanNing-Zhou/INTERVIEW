@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>拖拽小球</title>
+    <style>
+        #ball {
+            background-color: green;
+            border-radius: 50%;
+            height: 50px;
+            width: 50px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: move;
+        }
+    </style>
+</head>
+<body>
+<div id="ball"></div>
+<script>
+    // 获取小球
+    const ball = document.getElementById('ball');
+
+    // 记录鼠标按下位置和小球当前位置的差值
+    let offsetX = 0;
+    let offsetY = 0;
+
+    // 鼠标按下事件
+    ball.addEventListener('mousedown', function(event) {
+        offsetX = event.clientX - ball.offsetLeft;
+        offsetY = event.clientY - ball.offsetTop;
+        // 添加mousemove和mouseup事件监听器
+        document.addEventListener('mousemove', moveBall);
+        document.addEventListener('mouseup', stopMovingBall);
+    });
+
+    // 移动小球函数
+    function moveBall(event) {
+        ball.style.left = (event.clientX - offsetX) + 'px';
+        ball.style.top = (event.clientY - offsetY) + 'px';
+    }
+
+    // 停止移动小球函数
+    function stopMovingBall() {
+        // 移除mousemove和mouseup事件监听器
+        document.removeEventListener('mousemove', moveBall);
+        document.removeEventListener('mouseup', stopMovingBall);
+    }
+</script>
+</body>
+</html>
