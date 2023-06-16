@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+      html {
+        font-size: 60px;
+      }
+
+      body {
+        background: #E3E3E3;
+      }
+
+      .tab-container {
+        width: 7.02rem;
+        margin-left: 0.24rem;
+        margin-bottom: 0.24rem;
+        display: flex;
+        justify-content: space-around;
+      }
+
+      .card-container {
+          background-color: #646cff;
+        margin-left: 0.24rem;
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+      }
+
+      .tab-item{
+        width: 3.42rem;
+        height:0.68rem;
+        border-radius: 0.12rem;
+        text-align: center;
+        background-color:#ffffff;
+        line-height: 0.68rem;
+      }
+
+      .tab-active{
+        background-color: #FFE644;
+      }
+
+      .card-item{
+        width: 3.42rem;
+          position: absolute;
+        height: 4.56rem;
+        border-radius: 0.12rem;
+        margin-bottom: 24rem;
+        display: flex;
+        flex-direction: column;
+        background-color: #4CAF50;
+
+          height: 0.36rem;
+          border-radius: 0.18rem;
+          margin-left: 0.18rem;
+          background-color: rgba(15, 19, 26, 0.5);
+          letter-spacing: 0.12rem;
+          text-align: center;
+
+
+
+      }
+
+
+      ll{
+          width:7.02rem;
+          background-color:#fde44a;
+          height:0.68rem;
+      }
+
+    </style>
+</head>
+<body>
+
+
+<div className="tab-container">
+    <div  v-for="item in cardListData"  :key="item.tabName" :class="'tab-item'+(activeTabName==item.tabName ? ' tab-active' :
+'') "  @click="tabClickHandle(item.tabName)">
+        {{item.tabName}}
+    </div>
+</div>
+
+<div className="card-container" style="margin-left: 0.24rem;background-color: #646cff;">
+    <div v-for="item in currenCardtList" style="width:3.42rem;height: 4.56rem;border-radius: 0.12rem; margin-bottom: 24rem;display: flex;flex-direction: row;background-color: red;">
+    </div>
+</div>
+
+
+<div className="card-container" style=" width=7.02rem;margin-left: 0.24rem;background-color: #646cff;">
+    <div v-for="item in currenCardtList" :key="item.title"  style="position: none;width:3.42rem; height:4.56rem;border-radius: 0.12rem; margin-bottom: 24rem;display: flex;flex-direction: row;background-color: red;">
+        <img :src="item.img"/>
+        <div>{{item.name}}</div>
+    </div>
+</div>
+
+<script></script>
+
+</body>
+</html>
