@@ -9,7 +9,6 @@ server.on('connection', (socket) => {
     // 处理消息
     socket.on('message', (message) => {
         console.log(`Received message: ${message}`);
-
         // 广播消息给所有客户端
         server.clients.forEach((client) => {
             if (client.readyState === WebSocket.OPEN) {
@@ -22,4 +21,8 @@ server.on('connection', (socket) => {
     socket.on('close', () => {
         console.log('Client disconnected');
     });
+
+
 });
+
+
